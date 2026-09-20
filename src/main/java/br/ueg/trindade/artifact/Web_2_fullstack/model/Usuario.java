@@ -1,4 +1,4 @@
-package br.ueg.trindade.artifact.Web_2_fullstack;
+package br.ueg.trindade.artifact.Web_2_fullstack.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;

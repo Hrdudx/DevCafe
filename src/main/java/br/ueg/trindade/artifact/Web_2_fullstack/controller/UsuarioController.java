@@ -1,6 +1,6 @@
-package br.ueg.trindade.artifact.Web_2_fullstack.Controller;
+package br.ueg.trindade.artifact.Web_2_fullstack.controller;
 
-import br.ueg.trindade.artifact.Web_2_fullstack.Usuario;
+import br.ueg.trindade.artifact.Web_2_fullstack.model.Usuario;
 import br.ueg.trindade.artifact.Web_2_fullstack.repository.UsuarioRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

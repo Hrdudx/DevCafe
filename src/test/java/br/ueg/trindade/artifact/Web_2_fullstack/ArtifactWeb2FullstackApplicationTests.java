@@ -1,4 +1,4 @@
-package br.ueg.trindae.artifact.Web_2_fullstack;
+package br.ueg.trindade.artifact.Web_2_fullstack;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -12,7 +12,7 @@
 		<relativePath/>
 	</parent>
 
-	<groupId>br.ueg.trindae</groupId>
+	<groupId>br.ueg.trindade</groupId>
 	<artifactId>devcafe</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 

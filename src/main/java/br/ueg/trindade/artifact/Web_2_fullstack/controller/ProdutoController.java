@@ -1,4 +1,4 @@
-package br.ueg.trindade.artifact.Web_2_fullstack.Controller;
+package br.ueg.trindade.artifact.Web_2_fullstack.controller;
 
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Produto;
 import br.ueg.trindade.artifact.Web_2_fullstack.repository.ProdutoRepository;

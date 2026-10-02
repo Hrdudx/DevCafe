@@ -8,10 +8,14 @@ interface UsuarioItemProps {
 
 function UsuarioItem({ usuario, onEditar, onExcluir }: UsuarioItemProps) {
     return (
-        <li>
-            <strong>{usuario.nome}</strong> ({usuario.username}) — {usuario.email}
-            {onEditar && <button onClick={onEditar}>Editar</button>}
-            {onExcluir && <button onClick={onExcluir}>Excluir</button>}
+        <li className="list-item">
+            <span className="list-item-info">
+                <strong>{usuario.nome}</strong> ({usuario.username}) — {usuario.email}
+            </span>
+            <span className="list-item-actions">
+                {onEditar && <button className="btn btn-edit" onClick={onEditar}>Editar</button>}
+                {onExcluir && <button className="btn btn-delete" onClick={onExcluir}>Excluir</button>}
+            </span>
         </li>
     );
 }

@@ -38,26 +38,29 @@ function ProdutoForm({ onProdutoSalvo, produtoEditando }: ProdutoFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit}>
             <input
+                className="input"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 placeholder="Nome"
             />
             <input
+                className="input"
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 placeholder="Descrição"
             />
             <input
+                className="input"
                 type="number"
                 step="0.01"
                 value={preco}
                 onChange={(e) => setPreco(e.target.value)}
                 placeholder="Preço"
             />
-            {erro && <p>{erro}</p>}
-            <button type="submit">
+            {erro && <p className="form-error">{erro}</p>}
+            <button className="btn btn-primary" type="submit">
                 {produtoEditando ? "Salvar alterações" : "Cadastrar"}
             </button>
         </form>

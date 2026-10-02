@@ -1,3 +1,4 @@
+import "./App.css";
 import UsuariosPage from "./pages/UsuariosPage";
 import PermissoesPage from "./pages/PermissoesPage";
 import ProdutosPage from "./pages/ProdutosPage";
@@ -5,16 +6,22 @@ import ProdutosPage from "./pages/ProdutosPage";
 function App() {
     return (
         <div>
-            <h1>DevCafé ☕</h1>
+            <h1 className="app-header">DevCafé ☕</h1>
 
-            <h2>Usuários cadastrados</h2>
-            <UsuariosPage />
+            <section className="panel">
+                <h2 className="panel-title">Usuários cadastrados</h2>
+                <UsuariosPage />
+            </section>
 
-            <h2>Permissões cadastradas</h2>
-            <PermissoesPage />
+            <section className="panel">
+                <h2 className="panel-title">Permissões cadastradas</h2>
+                <PermissoesPage />
+            </section>
 
-            <h2>Produtos cadastrados</h2>
-            <ProdutosPage />
+            <section className="panel">
+                <h2 className="panel-title">Produtos cadastrados</h2>
+                <ProdutosPage />
+            </section>
         </div>
     );
 }

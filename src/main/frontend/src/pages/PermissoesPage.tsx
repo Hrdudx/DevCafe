@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import type { Permissao } from "../types/Permissao";
-import PermissaoItem from "./PermissaoItem";
-import PermissaoForm from "./PermissaoForm";
+import PermissaoItem from "../components/PermissaoItem";
+import PermissaoForm from "../components/PermissaoForm";
 
-function PermissaoList() {
+function PermissoesPage() {
     const [permissoes, setPermissoes] = useState<Permissao[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
@@ -67,4 +67,4 @@ function PermissaoList() {
     );
 }
 
-export default PermissaoList;
+export default PermissoesPage;

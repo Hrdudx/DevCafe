@@ -1,7 +1,7 @@
 package br.ueg.trindade.artifact.Web_2_fullstack.controller;
 
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Produto;
-import br.ueg.trindade.artifact.Web_2_fullstack.repository.ProdutoRepository;
+import br.ueg.trindade.artifact.Web_2_fullstack.service.ProdutoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,37 +20,30 @@ import java.util.List;
 public class ProdutoController {
 
     @Autowired
-    private ProdutoRepository produtoRepository;
+    private ProdutoService produtoService;
 
     @GetMapping("/produtos")
     public List<Produto> getProdutos() {
-        return produtoRepository.findAll();
+        return produtoService.listarTodos();
     }
 
     @GetMapping("/produtos/{id}")
     public Produto getProdutoById(@PathVariable Long id) {
-        return produtoRepository.findById(id).orElse(null);
+        return produtoService.buscarPorId(id);
     }
 
     @PostMapping("/produtos")
     public Produto createProduto(@RequestBody Produto produto) {
-        return produtoRepository.save(produto);
+        return produtoService.criar(produto);
     }
 
     @PutMapping("/produtos/{id}")
     public Produto updateProduto(@PathVariable Long id, @RequestBody Produto produtoAtualizado) {
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-
-        produto.setNome(produtoAtualizado.getNome());
-        produto.setDescricao(produtoAtualizado.getDescricao());
-        produto.setPreco(produtoAtualizado.getPreco());
-
-        return produtoRepository.save(produto);
+        return produtoService.atualizar(id, produtoAtualizado);
     }
 
     @DeleteMapping("/produtos/{id}")
     public void deleteProduto(@PathVariable Long id) {
-        produtoRepository.deleteById(id);
+        produtoService.excluir(id);
     }
 }

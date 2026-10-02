@@ -12,19 +12,29 @@ function ProdutoForm({ onProdutoSalvo, produtoEditando }: ProdutoFormProps) {
     const [nome, setNome] = useState(produtoEditando?.nome ?? "");
     const [descricao, setDescricao] = useState(produtoEditando?.descricao ?? "");
     const [preco, setPreco] = useState(produtoEditando?.preco?.toString() ?? "");
+    const [erro, setErro] = useState<string | null>(null);
 
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
 
-        const dados = { nome, descricao, preco: Number(preco) };
-
-        if (produtoEditando) {
-            await api.put(`/produtos/${produtoEditando.id}`, dados);
-        } else {
-            await api.post("/produtos", dados);
+        if (Number(preco) <= 0) {
+            setErro("O preço deve ser maior que zero.");
+            return;
         }
 
-        onProdutoSalvo();
+        setErro(null);
+        const dados = { nome, descricao, preco: Number(preco) };
+
+        try {
+            if (produtoEditando) {
+                await api.put(`/produtos/${produtoEditando.id}`, dados);
+            } else {
+                await api.post("/produtos", dados);
+            }
+            onProdutoSalvo();
+        } catch {
+            setErro("Não foi possível salvar o produto. Verifique os dados e tente novamente.");
+        }
     }
 
     return (
@@ -46,6 +56,7 @@ function ProdutoForm({ onProdutoSalvo, produtoEditando }: ProdutoFormProps) {
                 onChange={(e) => setPreco(e.target.value)}
                 placeholder="Preço"
             />
+            {erro && <p>{erro}</p>}
             <button type="submit">
                 {produtoEditando ? "Salvar alterações" : "Cadastrar"}
             </button>

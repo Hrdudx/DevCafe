@@ -1,7 +1,7 @@
 package br.ueg.trindade.artifact.Web_2_fullstack.controller;
 
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Permissao;
-import br.ueg.trindade.artifact.Web_2_fullstack.repository.PermissaoRepository;
+import br.ueg.trindade.artifact.Web_2_fullstack.service.PermissaoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,36 +20,30 @@ import java.util.List;
 public class PermissaoController {
 
     @Autowired
-    private PermissaoRepository permissaoRepository;
+    private PermissaoService permissaoService;
 
     @GetMapping("/permissoes")
     public List<Permissao> getAllPermissoes() {
-        return permissaoRepository.findAll();
+        return permissaoService.listarTodos();
     }
 
     @GetMapping("/permissoes/{id}")
     public Permissao getPermissaoById(@PathVariable Long id) {
-        return permissaoRepository.findById(id).orElse(null);
+        return permissaoService.buscarPorId(id);
     }
 
     @PostMapping("/permissoes")
     public Permissao createPermissao(@RequestBody Permissao permissao) {
-        return permissaoRepository.save(permissao);
+        return permissaoService.criar(permissao);
     }
 
     @PutMapping("/permissoes/{id}")
     public Permissao updatePermissao(@PathVariable Long id, @RequestBody Permissao permissaoAtualizada) {
-        Permissao permissao = permissaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Permissão não encontrada"));
-
-        permissao.setNome(permissaoAtualizada.getNome());
-        permissao.setDescricao(permissaoAtualizada.getDescricao());
-
-        return permissaoRepository.save(permissao);
+        return permissaoService.atualizar(id, permissaoAtualizada);
     }
 
     @DeleteMapping("/permissoes/{id}")
     public void deletePermissao(@PathVariable Long id) {
-        permissaoRepository.deleteById(id);
+        permissaoService.excluir(id);
     }
 }

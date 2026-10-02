@@ -47,7 +47,7 @@ Sobe em `http://localhost:8080`.
 ### Front-end
 
 ```bash
-cd frontend
+cd src/main/frontend
 npm install
 npm run dev
 ```
@@ -60,6 +60,6 @@ Sobe em `http://localhost:5173`.
 devcafe/
 ├── src/main/java/...        # Back-end Spring Boot
 ├── src/main/resources/      # Configurações (application.properties)
-├── frontend/                # Front-end React + TypeScript
+├── src/main/frontend/       # Front-end React + TypeScript
 └── pom.xml                  # Configuração Maven
 ```

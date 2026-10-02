@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import type { Produto } from "../types/Produto";
-import ProdutoItem from "./ProdutoItem";
-import ProdutoForm from "./ProdutoForm";
+import ProdutoItem from "../components/ProdutoItem";
+import ProdutoForm from "../components/ProdutoForm";
 
-function ProdutoList() {
+function ProdutosPage() {
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
@@ -67,4 +67,4 @@ function ProdutoList() {
     );
 }
 
-export default ProdutoList;
+export default ProdutosPage;

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import type { Usuario } from "../types/Usuario";
-import UsuarioItem from "./UsuarioItem";
-import UsuarioForm from "./UsuarioForm";
+import UsuarioItem from "../components/UsuarioItem";
+import UsuarioForm from "../components/UsuarioForm";
 
-function UsuarioList() {
+function UsuariosPage() {
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
@@ -47,6 +47,7 @@ function UsuarioList() {
             <UsuarioForm
                 key={editando?.id ?? "novo"}
                 usuarioEditando={editando}
+                usuariosExistentes={usuarios}
                 onUsuarioSalvo={() => {
                     carregarUsuarios();
                     setEditando(null);
@@ -67,4 +68,4 @@ function UsuarioList() {
     );
 }
 
-export default UsuarioList;
+export default UsuariosPage;

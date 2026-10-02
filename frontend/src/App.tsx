@@ -1,6 +1,6 @@
-import UsuarioList from "./components/UsuarioList";
-import PermissaoList from "./components/PermissaoList";
-import ProdutoList from "./components/ProdutoList";
+import UsuariosPage from "./pages/UsuariosPage";
+import PermissoesPage from "./pages/PermissoesPage";
+import ProdutosPage from "./pages/ProdutosPage";
 
 function App() {
     return (
@@ -8,13 +8,13 @@ function App() {
             <h1>DevCafé ☕</h1>
 
             <h2>Usuários cadastrados</h2>
-            <UsuarioList />
+            <UsuariosPage />
 
             <h2>Permissões cadastradas</h2>
-            <PermissaoList />
+            <PermissoesPage />
 
             <h2>Produtos cadastrados</h2>
-            <ProdutoList />
+            <ProdutosPage />
         </div>
     );
 }

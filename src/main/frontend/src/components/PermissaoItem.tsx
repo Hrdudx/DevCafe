@@ -8,10 +8,14 @@ interface PermissaoItemProps {
 
 function PermissaoItem({ permissao, onEditar, onExcluir }: PermissaoItemProps) {
     return (
-        <li>
-            <strong>{permissao.nome}</strong> — {permissao.descricao}
-            {onEditar && <button onClick={onEditar}>Editar</button>}
-            {onExcluir && <button onClick={onExcluir}>Excluir</button>}
+        <li className="list-item">
+            <span className="list-item-info">
+                <strong>{permissao.nome}</strong> — {permissao.descricao}
+            </span>
+            <span className="list-item-actions">
+                {onEditar && <button className="btn btn-edit" onClick={onEditar}>Editar</button>}
+                {onExcluir && <button className="btn btn-delete" onClick={onExcluir}>Excluir</button>}
+            </span>
         </li>
     );
 }

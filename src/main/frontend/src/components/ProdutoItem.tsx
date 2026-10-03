@@ -8,10 +8,14 @@ interface ProdutoItemProps {
 
 function ProdutoItem({ produto, onEditar, onExcluir }: ProdutoItemProps) {
     return (
-        <li>
-            <strong>{produto.nome}</strong> — {produto.descricao} (R$ {produto.preco.toFixed(2)})
-            {onEditar && <button onClick={onEditar}>Editar</button>}
-            {onExcluir && <button onClick={onExcluir}>Excluir</button>}
+        <li className="list-item">
+            <span className="list-item-info">
+                <strong>{produto.nome}</strong> — {produto.descricao} (R$ {produto.preco.toFixed(2)})
+            </span>
+            <span className="list-item-actions">
+                {onEditar && <button className="btn btn-edit" onClick={onEditar}>Editar</button>}
+                {onExcluir && <button className="btn btn-delete" onClick={onExcluir}>Excluir</button>}
+            </span>
         </li>
     );
 }

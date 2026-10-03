@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import LoginPage from "./pages/LoginPage";
 import InicioPage from "./pages/InicioPage";
 import CardapioPage from "./pages/CardapioPage";
+import PedidosPage from "./pages/PedidosPage";
 import UsuariosPage from "./pages/UsuariosPage";
 import PermissoesPage from "./pages/PermissoesPage";
 import ProdutosPage from "./pages/ProdutosPage";
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<Layout />}>
                 <Route index element={<InicioPage />} />
                 <Route path="cardapio" element={<CardapioPage />} />
+                <Route path="pedidos" element={<PedidosPage />} />
                 <Route
                     path="usuarios"
                     element={

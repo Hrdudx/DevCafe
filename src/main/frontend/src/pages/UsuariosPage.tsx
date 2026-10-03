@@ -35,11 +35,11 @@ function UsuariosPage() {
     }
 
     if (loading) {
-        return <p>Carregando usuários...</p>;
+        return <p className="state-message">Carregando usuários...</p>;
     }
 
     if (erro) {
-        return <p>{erro}</p>;
+        return <p className="state-error">{erro}</p>;
     }
 
     return (
@@ -54,7 +54,7 @@ function UsuariosPage() {
                 }}
             />
 
-            <ul>
+            <ul className="list">
                 {usuarios.map((usuario) => (
                     <UsuarioItem
                         key={usuario.id}

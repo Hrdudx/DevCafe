@@ -35,11 +35,11 @@ function ProdutosPage() {
     }
 
     if (loading) {
-        return <p>Carregando produtos...</p>;
+        return <p className="state-message">Carregando produtos...</p>;
     }
 
     if (erro) {
-        return <p>{erro}</p>;
+        return <p className="state-error">{erro}</p>;
     }
 
     return (
@@ -53,7 +53,7 @@ function ProdutosPage() {
                 }}
             />
 
-            <ul>
+            <ul className="list">
                 {produtos.map((produto) => (
                     <ProdutoItem
                         key={produto.id}

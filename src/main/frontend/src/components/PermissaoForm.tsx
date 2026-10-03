@@ -27,18 +27,20 @@ function PermissaoForm({ onPermissaoSalva, permissaoEditando }: PermissaoFormPro
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit}>
             <input
+                className="input"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 placeholder="Nome"
             />
             <input
+                className="input"
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 placeholder="Descrição"
             />
-            <button type="submit">
+            <button className="btn btn-primary" type="submit">
                 {permissaoEditando ? "Salvar alterações" : "Cadastrar"}
             </button>
         </form>

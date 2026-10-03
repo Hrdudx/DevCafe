@@ -35,11 +35,11 @@ function PermissoesPage() {
     }
 
     if (loading) {
-        return <p>Carregando permissões...</p>;
+        return <p className="state-message">Carregando permissões...</p>;
     }
 
     if (erro) {
-        return <p>{erro}</p>;
+        return <p className="state-error">{erro}</p>;
     }
 
     return (
@@ -53,7 +53,7 @@ function PermissoesPage() {
                 }}
             />
 
-            <ul>
+            <ul className="list">
                 {permissoes.map((permissao) => (
                     <PermissaoItem
                         key={permissao.id}

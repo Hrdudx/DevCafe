@@ -45,24 +45,27 @@ function UsuarioForm({ onUsuarioSalvo, usuarioEditando, usuariosExistentes }: Us
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit}>
             <input
+                className="input"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 placeholder="Nome"
             />
             <input
+                className="input"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Username"
             />
             <input
+                className="input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="E-mail"
             />
-            {erro && <p>{erro}</p>}
-            <button type="submit">
+            {erro && <p className="form-error">{erro}</p>}
+            <button className="btn btn-primary" type="submit">
                 {usuarioEditando ? "Salvar alterações" : "Cadastrar"}
             </button>
         </form>

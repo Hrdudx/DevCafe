@@ -1,19 +1,22 @@
 :root {
-  --bg: #120d21;
-  --bg-elevated: #1c1530;
-  --bg-input: #241b3f;
-  --border: #342a57;
-  --text: #f1edfb;
-  --text-muted: #a99cc9;
-  --accent-start: #7c3aed;
-  --accent-end: #a855f7;
-  --accent-text: #c4b5fd;
-  --danger-bg: #4a1f33;
-  --danger-text: #f4b8cf;
-  --success-text: #86efac;
+  --bg: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-input: #f0f7fd;
+  --border: #d9e9f8;
+  --text: #0a0a0a;
+  --text-muted: #5b6b7d;
+  --accent-start: #38bdf8;
+  --accent-end: #0ea5e9;
+  --accent-text: #0284c7;
+  --danger-bg: #fde7f0;
+  --danger-text: #be185d;
+  --success-text: #15803d;
+  --card-shadow: 0 1px 3px rgba(14, 165, 233, 0.1);
+  --sidebar-bg: #0b1726;
+  --sidebar-text: #90a2ba;
 
   font-family: system-ui, "Segoe UI", Roboto, sans-serif;
-  color-scheme: dark;
+  color-scheme: light;
   color: var(--text);
   background: var(--bg);
 }
@@ -25,7 +28,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at top, #1a1430, var(--bg) 60%);
+  background: var(--bg);
 }
 
 #root {

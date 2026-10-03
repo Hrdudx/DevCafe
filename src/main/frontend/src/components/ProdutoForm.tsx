@@ -3,6 +3,8 @@ import type { FormEvent } from "react";
 import api from "../services/api";
 import type { Produto } from "../types/Produto";
 
+const CATEGORIAS = ["Cafés", "Bebidas Geladas", "Lanches", "Doces", "Salgados"];
+
 interface ProdutoFormProps {
     onProdutoSalvo: () => void;
     produtoEditando?: Produto | null;
@@ -12,6 +14,8 @@ function ProdutoForm({ onProdutoSalvo, produtoEditando }: ProdutoFormProps) {
     const [nome, setNome] = useState(produtoEditando?.nome ?? "");
     const [descricao, setDescricao] = useState(produtoEditando?.descricao ?? "");
     const [preco, setPreco] = useState(produtoEditando?.preco?.toString() ?? "");
+    const [categoria, setCategoria] = useState(produtoEditando?.categoria ?? CATEGORIAS[0]);
+    const [imagemUrl, setImagemUrl] = useState(produtoEditando?.imagemUrl ?? "");
     const [erro, setErro] = useState<string | null>(null);
 
     async function handleSubmit(event: FormEvent) {
@@ -23,7 +27,7 @@ function ProdutoForm({ onProdutoSalvo, produtoEditando }: ProdutoFormProps) {
         }
 
         setErro(null);
-        const dados = { nome, descricao, preco: Number(preco) };
+        const dados = { nome, descricao, preco: Number(preco), categoria, imagemUrl };
 
         try {
             if (produtoEditando) {
@@ -58,6 +62,17 @@ function ProdutoForm({ onProdutoSalvo, produtoEditando }: ProdutoFormProps) {
                 value={preco}
                 onChange={(e) => setPreco(e.target.value)}
                 placeholder="Preço"
+            />
+            <select className="input" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+                {CATEGORIAS.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                ))}
+            </select>
+            <input
+                className="input"
+                value={imagemUrl}
+                onChange={(e) => setImagemUrl(e.target.value)}
+                placeholder="URL da imagem (opcional)"
             />
             {erro && <p className="form-error">{erro}</p>}
             <button className="btn btn-primary" type="submit">

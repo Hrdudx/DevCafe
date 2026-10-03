@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { salvarUsuarioLogado } from "../services/auth";
 
 function LoginPage() {
     const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ function LoginPage() {
         event.preventDefault();
         // Login ainda não valida credenciais de verdade — autenticação real
         // (Spring Security + JWT) é um próximo passo do projeto.
+        salvarUsuarioLogado(email || "visitante");
         navigate("/");
     }
 

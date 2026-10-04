@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import api from "../services/api";
 import type { Usuario } from "../types/Usuario";
-import UsuarioItem from "../components/UsuarioItem";
 import UsuarioForm from "../components/UsuarioForm";
+import UsuarioLista from "../components/UsuarioLista";
 
 function UsuariosPage() {
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
+    const [erroExclusao, setErroExclusao] = useState<string | null>(null);
     const [editando, setEditando] = useState<Usuario | null>(null);
 
     function carregarUsuarios() {
-        setLoading(true);
         api.get<Usuario[]>("/usuarios")
             .then((resposta) => {
                 setUsuarios(resposta.data);
@@ -30,12 +31,20 @@ function UsuariosPage() {
     }, []);
 
     async function excluir(id: number) {
-        await api.delete(`/usuarios/${id}`);
+        if (!window.confirm("Tem certeza que deseja excluir?")) return;
+        try {
+            await api.delete(`/usuarios/${id}`);
+            setErroExclusao(null);
+            if (editando?.id === id) setEditando(null);
+        } catch (e) {
+            const mensagem = axios.isAxiosError(e) ? e.response?.data?.message : null;
+            setErroExclusao(mensagem || "Não foi possível excluir o usuário.");
+        }
         carregarUsuarios();
     }
 
     if (loading) {
-        return <p className="state-message">Carregando usuários...</p>;
+        return <p className="state-message">Carregando...</p>;
     }
 
     if (erro) {
@@ -45,25 +54,18 @@ function UsuariosPage() {
     return (
         <>
             <UsuarioForm
-                key={editando?.id ?? "novo"}
                 usuarioEditando={editando}
                 usuariosExistentes={usuarios}
+                onCancelar={() => setEditando(null)}
                 onUsuarioSalvo={() => {
                     carregarUsuarios();
                     setEditando(null);
                 }}
             />
 
-            <ul className="list">
-                {usuarios.map((usuario) => (
-                    <UsuarioItem
-                        key={usuario.id}
-                        usuario={usuario}
-                        onEditar={() => setEditando(usuario)}
-                        onExcluir={() => excluir(usuario.id)}
-                    />
-                ))}
-            </ul>
+            {erroExclusao && <p className="state-error">{erroExclusao}</p>}
+
+            <UsuarioLista usuarios={usuarios} onEditar={setEditando} onExcluir={excluir} />
         </>
     );
 }

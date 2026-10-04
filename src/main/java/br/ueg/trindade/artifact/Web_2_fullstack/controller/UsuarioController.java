@@ -3,7 +3,6 @@ package br.ueg.trindade.artifact.Web_2_fullstack.controller;
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Usuario;
 import br.ueg.trindade.artifact.Web_2_fullstack.service.UsuarioService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +20,11 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
+
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     @GetMapping("/usuarios")
     public List<Usuario> getAllUsuarios() {

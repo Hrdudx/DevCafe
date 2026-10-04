@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/usuarios")
 @CrossOrigin(originPatterns = "http://localhost:*")
 public class UsuarioController {
 
@@ -26,27 +26,27 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping("/usuarios")
+    @GetMapping
     public List<Usuario> getAllUsuarios() {
         return usuarioService.listarTodos();
     }
 
-    @GetMapping("/usuarios/{id}")
+    @GetMapping("/{id}")
     public Usuario getUsuarioById(@PathVariable Long id) {
         return usuarioService.buscarPorId(id);
     }
 
-    @PostMapping("/usuarios")
+    @PostMapping
     public Usuario createUsuario(@RequestBody Usuario usuario) {
         return usuarioService.criar(usuario);
     }
 
-    @PutMapping("/usuarios/{id}")
+    @PutMapping("/{id}")
     public Usuario updateUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
         return usuarioService.atualizar(id, usuarioAtualizado);
     }
 
-    @DeleteMapping("/usuarios/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUsuario(@PathVariable Long id) {
         usuarioService.excluir(id);
     }

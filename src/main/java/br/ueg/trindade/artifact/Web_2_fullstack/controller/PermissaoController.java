@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/permissoes")
 @CrossOrigin(originPatterns = "http://localhost:*")
 public class PermissaoController {
 
@@ -26,27 +26,27 @@ public class PermissaoController {
         this.permissaoService = permissaoService;
     }
 
-    @GetMapping("/permissoes")
+    @GetMapping
     public List<Permissao> getAllPermissoes() {
         return permissaoService.listarTodos();
     }
 
-    @GetMapping("/permissoes/{id}")
+    @GetMapping("/{id}")
     public Permissao getPermissaoById(@PathVariable Long id) {
         return permissaoService.buscarPorId(id);
     }
 
-    @PostMapping("/permissoes")
+    @PostMapping
     public Permissao createPermissao(@RequestBody Permissao permissao) {
         return permissaoService.criar(permissao);
     }
 
-    @PutMapping("/permissoes/{id}")
+    @PutMapping("/{id}")
     public Permissao updatePermissao(@PathVariable Long id, @RequestBody Permissao permissaoAtualizada) {
         return permissaoService.atualizar(id, permissaoAtualizada);
     }
 
-    @DeleteMapping("/permissoes/{id}")
+    @DeleteMapping("/{id}")
     public void deletePermissao(@PathVariable Long id) {
         permissaoService.excluir(id);
     }

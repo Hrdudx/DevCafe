@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/produtos")
 @CrossOrigin(originPatterns = "http://localhost:*")
 public class ProdutoController {
 
@@ -26,27 +26,27 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
-    @GetMapping("/produtos")
+    @GetMapping
     public List<Produto> getProdutos() {
         return produtoService.listarTodos();
     }
 
-    @GetMapping("/produtos/{id}")
+    @GetMapping("/{id}")
     public Produto getProdutoById(@PathVariable Long id) {
         return produtoService.buscarPorId(id);
     }
 
-    @PostMapping("/produtos")
+    @PostMapping
     public Produto createProduto(@RequestBody Produto produto) {
         return produtoService.criar(produto);
     }
 
-    @PutMapping("/produtos/{id}")
+    @PutMapping("/{id}")
     public Produto updateProduto(@PathVariable Long id, @RequestBody Produto produtoAtualizado) {
         return produtoService.atualizar(id, produtoAtualizado);
     }
 
-    @DeleteMapping("/produtos/{id}")
+    @DeleteMapping("/{id}")
     public void deleteProduto(@PathVariable Long id) {
         produtoService.excluir(id);
     }

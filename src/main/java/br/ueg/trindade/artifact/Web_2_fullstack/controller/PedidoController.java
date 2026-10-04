@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/pedidos")
 @CrossOrigin(originPatterns = "http://localhost:*")
 public class PedidoController {
 
@@ -28,27 +28,27 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
-    @GetMapping("/pedidos")
+    @GetMapping
     public List<Pedido> getPedidos() {
         return pedidoService.listarTodos();
     }
 
-    @GetMapping("/pedidos/{id}")
+    @GetMapping("/{id}")
     public Pedido getPedidoById(@PathVariable Long id) {
         return pedidoService.buscarPorId(id);
     }
 
-    @PostMapping("/pedidos")
+    @PostMapping
     public Pedido createPedido(@RequestBody NovoPedidoRequest dados) {
         return pedidoService.criar(dados);
     }
 
-    @PutMapping("/pedidos/{id}/status")
+    @PutMapping("/{id}/status")
     public Pedido updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
         return pedidoService.atualizarStatus(id, body.get("status"));
     }
 
-    @DeleteMapping("/pedidos/{id}")
+    @DeleteMapping("/{id}")
     public void deletePedido(@PathVariable Long id) {
         pedidoService.excluir(id);
     }

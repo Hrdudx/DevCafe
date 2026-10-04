@@ -102,9 +102,6 @@ function LoginPage() {
                                 />
                                 Lembrar de mim
                             </label>
-                            <a className="link" href="#" onClick={(e) => e.preventDefault()}>
-                                Esqueceu sua senha?
-                            </a>
                         </div>
 
                         {erro && <p className="state-error">{erro}</p>}

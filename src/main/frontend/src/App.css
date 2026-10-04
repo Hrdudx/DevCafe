@@ -806,26 +806,6 @@ button.btn-icon {
   margin-top: 28px;
 }
 
-.login-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 13px;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text);
-}
-
-.checkbox-label input {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--primary);
-}
-
 /* ---------- Início ---------- */
 
 .stats-grid {

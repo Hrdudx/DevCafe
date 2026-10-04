@@ -11,7 +11,6 @@ function LoginPage() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [mostrarSenha, setMostrarSenha] = useState(false);
-    const [lembrar, setLembrar] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
     const [entrando, setEntrando] = useState(false);
     const navigate = useNavigate();
@@ -92,17 +91,6 @@ function LoginPage() {
                                 </button>
                             </span>
                         </label>
-
-                        <div className="login-row">
-                            <label className="checkbox-label">
-                                <input
-                                    type="checkbox"
-                                    checked={lembrar}
-                                    onChange={(e) => setLembrar(e.target.checked)}
-                                />
-                                Lembrar de mim
-                            </label>
-                        </div>
 
                         {erro && <p className="state-error">{erro}</p>}
 

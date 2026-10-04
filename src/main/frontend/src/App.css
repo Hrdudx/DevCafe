@@ -124,6 +124,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
 }
 
 .topbar-avatar {
@@ -413,6 +419,25 @@
   border-radius: 6px;
 }
 
+.acoes {
+  display: inline-flex;
+  gap: 4px;
+}
+
+button.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-icon-danger {
+  color: #e5484d;
+}
+
+.btn-icon-danger:hover {
+  background: var(--danger-bg) !important;
+}
+
 .btn-icon:hover {
   background: var(--primary-soft);
 }
@@ -541,6 +566,11 @@
   font-size: 13px;
   color: var(--text);
   cursor: pointer;
+}
+
+.dropdown-menu button svg {
+  vertical-align: -2px;
+  margin-right: 6px;
 }
 
 .dropdown-menu button:hover {
@@ -700,7 +730,7 @@
 
 .col-acoes {
   text-align: center !important;
-  width: 70px;
+  width: 90px;
 }
 
 .col-right {
@@ -1581,4 +1611,10 @@
   .info-card {
     box-shadow: none;
   }
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
 }

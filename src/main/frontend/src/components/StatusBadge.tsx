@@ -1,10 +1,4 @@
-export const STATUS_INFO: Record<string, { label: string; className: string }> = {
-    RECEBIDO: { label: "Recebido", className: "badge-info" },
-    EM_PREPARO: { label: "Em preparo", className: "badge-warning" },
-    PRONTO: { label: "Pronto", className: "badge-info" },
-    ENTREGUE: { label: "Concluído", className: "badge-success" },
-    CANCELADO: { label: "Cancelado", className: "badge-danger" },
-};
+import { STATUS_INFO } from "../utils/constantes";
 
 function StatusBadge({ status }: { status: string }) {
     const info = STATUS_INFO[status] ?? { label: status, className: "badge-info" };

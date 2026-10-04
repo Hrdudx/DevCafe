@@ -20,9 +20,4 @@ function CategoriaTabs({ opcoes, selecionada, onSelecionar }: CategoriaTabsProps
     );
 }
 
-export const CATEGORIAS = ["Todos", "Cafés", "Bebidas Geladas", "Lanches", "Doces", "Salgados"].map((c) => ({
-    valor: c,
-    label: c,
-}));
-
 export default CategoriaTabs;

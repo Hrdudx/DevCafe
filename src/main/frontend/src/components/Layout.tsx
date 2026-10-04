@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
     Bell,
     BookOpen,
@@ -8,6 +8,7 @@ import {
     Coffee,
     FileText,
     House,
+    LogOut,
     Search,
     Settings,
     ShoppingCart,
@@ -18,7 +19,7 @@ import {
 import api from "../services/api";
 import type { Pedido } from "../types/Pedido";
 import type { Produto } from "../types/Produto";
-import { obterUsuarioLogado } from "../services/auth";
+import { obterUsuario, obterUsuarioLogado, sair } from "../services/auth";
 
 const navItens = [
     { to: "/", label: "Início", icon: House },
@@ -51,6 +52,7 @@ function Layout() {
     const [busca, setBusca] = useState("");
     const [emAndamento, setEmAndamento] = useState(0);
     const [nomesProdutos, setNomesProdutos] = useState<string[]>([]);
+    const [menuUsuario, setMenuUsuario] = useState(false);
 
     useEffect(() => {
         api.get<Produto[]>("/produtos")
@@ -76,6 +78,16 @@ function Layout() {
             navigate(`/pedidos?busca=${encodeURIComponent(termo.replace("#", ""))}`);
         }
         setBusca("");
+    }
+
+    // Sem login, todas as telas internas mandam para a tela de login.
+    if (!obterUsuario()) {
+        return <Navigate to="/login" replace />;
+    }
+
+    function encerrarSessao() {
+        sair();
+        navigate("/login");
     }
 
     return (
@@ -112,12 +124,25 @@ function Layout() {
                             <Bell size={20} strokeWidth={1.8} />
                             {emAndamento > 0 && <span className="topbar-bell-dot" />}
                         </button>
-                        <div className="topbar-user">
-                            <span className="topbar-avatar">{usuario.charAt(0).toUpperCase()}</span>
-                            <span className="topbar-user-text">
-                                <strong>{usuario}</strong>
-                                <small>Administradora</small>
-                            </span>
+                        <div className="dropdown">
+                            <button
+                                className="topbar-user"
+                                onClick={() => setMenuUsuario((v) => !v)}
+                                aria-expanded={menuUsuario}
+                            >
+                                <span className="topbar-avatar">{usuario.charAt(0).toUpperCase()}</span>
+                                <span className="topbar-user-text">
+                                    <strong>{usuario}</strong>
+                                    <small>Administradora</small>
+                                </span>
+                            </button>
+                            {menuUsuario && (
+                                <div className="dropdown-menu">
+                                    <button onClick={encerrarSessao}>
+                                        <LogOut size={14} /> Sair
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </header>

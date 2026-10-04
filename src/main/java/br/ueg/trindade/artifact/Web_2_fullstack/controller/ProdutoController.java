@@ -3,7 +3,7 @@ package br.ueg.trindade.artifact.Web_2_fullstack.controller;
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Produto;
 import br.ueg.trindade.artifact.Web_2_fullstack.service.ProdutoService;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,10 +17,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ProdutoController {
 
-    @Autowired
-    private ProdutoService produtoService;
+    private final ProdutoService produtoService;
+
+    public ProdutoController(ProdutoService produtoService) {
+        this.produtoService = produtoService;
+    }
 
     @GetMapping("/produtos")
     public List<Produto> getProdutos() {

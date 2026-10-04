@@ -1,24 +1,35 @@
 :root {
-  --bg: #ffffff;
-  --bg-elevated: #ffffff;
-  --bg-input: #f0f7fd;
-  --border: #d9e9f8;
-  --text: #0a0a0a;
-  --text-muted: #5b6b7d;
-  --accent-start: #38bdf8;
-  --accent-end: #0ea5e9;
-  --accent-text: #0284c7;
-  --danger-bg: #fde7f0;
-  --danger-text: #be185d;
-  --success-text: #15803d;
-  --card-shadow: 0 1px 3px rgba(14, 165, 233, 0.1);
-  --sidebar-bg: #0b1726;
-  --sidebar-text: #90a2ba;
+  --bg: #f4f7fc;
+  --surface: #ffffff;
+  --surface-muted: #f7f9fd;
+  --border: #e3e9f3;
+  --border-strong: #cfd9e8;
+  --text: #0f1b33;
+  --text-muted: #5f6f86;
+  --text-soft: #8a98ad;
+  --primary: #1d5ee8;
+  --primary-hover: #174fc7;
+  --primary-soft: #e8effd;
+  --sidebar-bg: #0b2552;
+  --sidebar-bg-end: #081c40;
+  --sidebar-text: #c3d0e6;
+  --success-bg: #dcf5e4;
+  --success-text: #1d8445;
+  --warning-bg: #fff0c7;
+  --warning-text: #9a6400;
+  --danger-bg: #fde3e3;
+  --danger-text: #c63434;
+  --info-bg: #e3edfd;
+  --info-text: #1d5ee8;
+  --shadow-sm: 0 1px 2px rgba(15, 27, 51, 0.05);
+  --shadow-md: 0 6px 20px rgba(15, 27, 51, 0.08);
+  --radius: 12px;
 
-  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
   color-scheme: light;
   color: var(--text);
   background: var(--bg);
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
@@ -40,4 +51,11 @@ h2,
 h3 {
   color: var(--text);
   font-weight: 700;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }

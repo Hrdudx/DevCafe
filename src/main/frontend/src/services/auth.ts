@@ -1,15 +1,39 @@
-const CHAVE = "devcafe_usuario";
+import type { Usuario } from "../types/Usuario";
 
-export function salvarUsuarioLogado(email: string) {
-    const nome = email.split("@")[0] || "Visitante";
-    const nomeFormatado = nome.charAt(0).toUpperCase() + nome.slice(1);
-    localStorage.setItem(CHAVE, nomeFormatado);
+const CHAVE = "devcafe_usuario_logado";
+
+// Guarda no navegador o usuário que entrou (só nome e contato, nunca a senha).
+export function salvarUsuarioLogado(usuario: Usuario) {
+    try {
+        localStorage.setItem(CHAVE, JSON.stringify(usuario));
+    } catch {
+        // Sem localStorage o login só não sobrevive a um recarregamento.
+    }
 }
 
-export function obterUsuarioLogado(): string {
+export function obterUsuario(): Usuario | null {
     try {
-        return localStorage.getItem(CHAVE) ?? "Visitante";
+        const salvo = localStorage.getItem(CHAVE);
+        return salvo ? JSON.parse(salvo) : null;
     } catch {
-        return "Visitante";
+        return null;
     }
+}
+
+export function sair() {
+    try {
+        localStorage.removeItem(CHAVE);
+    } catch {
+        // Nada a limpar.
+    }
+}
+
+// Primeiro nome do usuário logado, usado nas saudações.
+export function obterUsuarioLogado(): string {
+    const usuario = obterUsuario();
+    return usuario?.nome.split(" ")[0] || "Visitante";
+}
+
+export function obterEmailLogado(): string {
+    return obterUsuario()?.email ?? "";
 }

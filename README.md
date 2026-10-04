@@ -10,21 +10,44 @@ Back-end em **Java + Spring Boot** e front-end em **React + TypeScript**, integr
 
 ---
 
+## 🔑 Acesso para teste
+
+| E-mail | Senha |
+|---|---|
+| **`admin@devcafe.com`** | **`admin123`** |
+
+Esse usuário é criado automaticamente na primeira vez que o back-end sobe.
+Também são carregados **produtos e pedidos de exemplo** (`src/main/resources/data.sql`), para as telas não começarem vazias.
+Usuários novos cadastrados na tela **Usuários** (com senha) também conseguem fazer login.
+
 ## 1. Como rodar
 
-**Pré-requisitos:** Java 21 e Node.js 20.19+ (ou 22+). Não é preciso instalar banco: o H2 é criado sozinho.
+**Pré-requisitos:** Java 21, Node.js 20.19+ (ou 22+) e Git.
+Não é preciso instalar Maven nem banco de dados: o projeto usa o Maven Wrapper (`mvnw`) e o H2 é criado sozinho.
 
-Abra **dois terminais** na pasta do projeto:
-
-**Terminal 1 — back-end** (sobe em `http://localhost:8080`)
+### Passo 1 — Baixar o projeto
 
 ```bash
-./mvnw spring-boot:run
+git clone https://github.com/Hrdudx/DevCafe.git
+cd DevCafe
 ```
 
-> No Windows: `mvnw.cmd spring-boot:run`
+### Passo 2 — Subir o back-end (Terminal 1)
 
-**Terminal 2 — front-end** (sobe em `http://localhost:5173`)
+Na pasta `DevCafe`:
+
+| Sistema | Comando |
+|---|---|
+| Windows (PowerShell) | `.\mvnw.cmd spring-boot:run` |
+| Windows (Prompt de Comando) | `mvnw.cmd spring-boot:run` |
+| Linux / macOS | `./mvnw spring-boot:run` |
+
+Aguarde aparecer a mensagem **`Started ArtifactWeb2FullstackApplication`**.
+O back-end fica em `http://localhost:8080` (teste: `http://localhost:8080/api/produtos` deve mostrar uma lista).
+
+### Passo 3 — Subir o front-end (Terminal 2)
+
+Abra **outro terminal** na pasta `DevCafe`:
 
 ```bash
 cd src/main/frontend
@@ -32,26 +55,17 @@ npm install
 npm run dev
 ```
 
-Depois acesse **http://localhost:5173** no navegador.
+### Passo 4 — Abrir no navegador
 
-> Se a porta 5173 estiver ocupada, o Vite usa a próxima (5174, 5175…) e mostra o endereço no terminal.
+Acesse **http://localhost:5173** e entre com **`admin@devcafe.com`** / **`admin123`**.
+
+> Se a porta 5173 estiver ocupada, o Vite usa a próxima (5174, 5175…) e mostra o endereço certo no terminal.
 > O back-end aceita o front-end em qualquer porta do `localhost`.
 >
-> Se o login mostrar *"Não foi possível entrar. Verifique se o back-end está rodando"*, confira se o
-> Terminal 1 está com o back-end no ar (`http://localhost:8080/api/produtos` deve abrir uma lista).
+> Se o login mostrar *"Não foi possível entrar. Verifique se o back-end está rodando"*, o Terminal 1
+> ainda não terminou de subir ou foi fechado.
 
-## 2. Login
-
-Na primeira vez que o back-end sobe, um administrador é criado automaticamente:
-
-| E-mail | Senha |
-|---|---|
-| `admin@devcafe.com` | `admin123` |
-
-Também são carregados **produtos e pedidos de exemplo** (`src/main/resources/data.sql`), para as telas não começarem vazias.
-Novos usuários cadastrados na tela **Usuários** (com senha) também conseguem fazer login.
-
-## 3. Como testar o CRUD no navegador
+## 2. Como testar o CRUD no navegador
 
 | Entidade | Tela (menu) | O que fazer |
 |---|---|---|
@@ -62,7 +76,7 @@ Novos usuários cadastrados na tela **Usuários** (com senha) também conseguem 
 
 Após cada operação a lista é recarregada a partir da API.
 
-## 4. Checklist da Avaliação N1
+## 3. Checklist da Avaliação N1
 
 ### Projeto e ambiente
 
@@ -103,10 +117,10 @@ Após cada operação a lista é recarregada a partir da API.
 | `pages/` com a lógica de cada tela | `UsuariosPage`, `PermissoesPage`, `ProdutosPage` (entidade própria), `PedidosPage`, entre outras |
 | `App.tsx` apenas renderizando as páginas | `App.tsx` (só declara as rotas) |
 | Botões **Editar** e **Excluir**, recarregando a lista | componentes `*Item.tsx` + função `carregar...()` nas páginas |
-| CRUD completo no navegador para `Usuario`, `Permissao` e entidade própria | ver seção 3 |
-| Aplicação de ponta a ponta (React → API → H2) | ver seções 1 e 3 |
+| CRUD completo no navegador para `Usuario`, `Permissao` e entidade própria | ver seção 2 |
+| Aplicação de ponta a ponta (React → API → H2) | ver seções 1 e 2 |
 
-## 5. Endpoints da API
+## 4. Endpoints da API
 
 Base: `http://localhost:8080/api`
 
@@ -125,7 +139,7 @@ Erros voltam com o código HTTP adequado e uma mensagem (`404` não encontrado, 
 O console do banco H2 fica em `http://localhost:8080/h2-console`
 (JDBC URL `jdbc:h2:file:./database.db`, usuário `sa`, sem senha).
 
-## 6. Telas do sistema
+## 5. Telas do sistema
 
 | Tela | O que faz |
 |---|---|
@@ -138,7 +152,7 @@ O console do banco H2 fica em `http://localhost:8080/h2-console`
 | Clientes / Relatórios | Informações geradas a partir dos pedidos |
 | Usuários / Configurações | Cadastros de usuários, produtos e permissões |
 
-## 7. Estrutura do projeto
+## 6. Estrutura do projeto
 
 ```
 DevCafe/
@@ -161,13 +175,13 @@ DevCafe/
         └── App.tsx                           # Rotas
 ```
 
-## 8. Tecnologias
+## 7. Tecnologias
 
 **Back-end:** Java 21, Spring Boot 4, Spring Web, Spring Data JPA, Spring Security (BCrypt), H2, PostgreSQL (driver), DevTools.
 
 **Front-end:** React 19, TypeScript, Vite, Axios, React Router, lucide-react (ícones).
 
-## 9. Próximos passos
+## 8. Próximos passos
 
 - Proteger as rotas da API com Spring Security + JWT
 - Cadastro de promoções

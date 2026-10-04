@@ -4,7 +4,7 @@ import { ChevronDown, CreditCard, Mail, MapPin, Printer, UserRound } from "lucid
 import api from "../services/api";
 import type { Pedido } from "../types/Pedido";
 import Breadcrumb from "../components/Breadcrumb";
-import { STATUS_INFO } from "../components/StatusBadge";
+import { STATUS_INFO } from "../utils/constantes";
 import { formatarData, formatarHora, formatarMoeda } from "../utils/formatar";
 
 // Por enquanto todo pedido é retirado no balcão da loja.

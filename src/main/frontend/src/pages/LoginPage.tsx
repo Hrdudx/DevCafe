@@ -2,7 +2,10 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Coffee, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import axios from "axios";
+import api from "../services/api";
 import { salvarUsuarioLogado } from "../services/auth";
+import type { Usuario } from "../types/Usuario";
 
 function GoogleIcon() {
     return (
@@ -20,14 +23,32 @@ function LoginPage() {
     const [senha, setSenha] = useState("");
     const [mostrarSenha, setMostrarSenha] = useState(false);
     const [lembrar, setLembrar] = useState(true);
+    const [erro, setErro] = useState<string | null>(null);
+    const [entrando, setEntrando] = useState(false);
     const navigate = useNavigate();
 
-    function entrar(event?: FormEvent) {
-        event?.preventDefault();
-        // Login ainda não valida credenciais de verdade — autenticação real
-        // (Spring Security + JWT) é um próximo passo do projeto.
-        salvarUsuarioLogado(email || "visitante");
-        navigate("/");
+    function entrar(event: FormEvent) {
+        event.preventDefault();
+        if (!email || !senha) {
+            setErro("Informe e-mail e senha.");
+            return;
+        }
+        setEntrando(true);
+        setErro(null);
+        // Confere e-mail e senha com os usuários cadastrados no back-end.
+        api.post<Usuario>("/auth/login", { email, senha })
+            .then((resposta) => {
+                salvarUsuarioLogado(resposta.data);
+                navigate("/");
+            })
+            .catch((e) => {
+                if (axios.isAxiosError(e) && e.response?.status === 401) {
+                    setErro("E-mail ou senha inválidos.");
+                } else {
+                    setErro("Não foi possível entrar. Verifique se o back-end está rodando.");
+                }
+            })
+            .finally(() => setEntrando(false));
     }
 
     return (
@@ -97,20 +118,29 @@ function LoginPage() {
                             </a>
                         </div>
 
-                        <button className="btn btn-primary btn-lg btn-block" type="submit">
-                            Entrar
+                        {erro && <p className="state-error">{erro}</p>}
+
+                        <button className="btn btn-primary btn-lg btn-block" type="submit" disabled={entrando}>
+                            {entrando ? "Entrando..." : "Entrar"}
                         </button>
                     </form>
 
                     <div className="login-divider">ou entre com</div>
-                    <button className="btn btn-google btn-lg btn-block" type="button" onClick={() => entrar()}>
+                    <button className="btn btn-google btn-lg btn-block" type="button" onClick={() => setErro("Entrar com Google ainda não está disponível. Use e-mail e senha.")}>
                         <GoogleIcon />
                         Entrar com Google
                     </button>
 
                     <p className="login-signup">
                         Ainda não tem uma conta?{" "}
-                        <a className="link" href="#" onClick={(e) => e.preventDefault()}>
+                        <a
+                            className="link"
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setErro("Peça a um administrador para criar sua conta em Usuários.");
+                            }}
+                        >
                             Cadastre-se
                         </a>
                     </p>

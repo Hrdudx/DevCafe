@@ -1,21 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import { CarrinhoContext } from "./useCarrinho";
+import type { Carrinho } from "./useCarrinho";
 
 const CHAVE = "devcafe_carrinho";
 
-// Quantidade de cada produto no carrinho, indexada pelo id do produto.
-type Carrinho = Record<number, number>;
-
-interface CarrinhoContextValue {
-    carrinho: Carrinho;
-    quantidadeTotal: number;
-    adicionar: (produtoId: number) => void;
-    remover: (produtoId: number) => void;
-    removerTudo: (produtoId: number) => void;
-    limpar: () => void;
-}
-
-const CarrinhoContext = createContext<CarrinhoContextValue | null>(null);
 
 function carregarCarrinho(): Carrinho {
     try {
@@ -70,12 +59,4 @@ export function CarrinhoProvider({ children }: { children: ReactNode }) {
             {children}
         </CarrinhoContext.Provider>
     );
-}
-
-export function useCarrinho() {
-    const contexto = useContext(CarrinhoContext);
-    if (!contexto) {
-        throw new Error("useCarrinho precisa estar dentro de <CarrinhoProvider>");
-    }
-    return contexto;
 }

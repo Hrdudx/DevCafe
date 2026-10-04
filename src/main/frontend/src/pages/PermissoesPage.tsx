@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import api from "../services/api";
 import type { Permissao } from "../types/Permissao";
-import PermissaoItem from "../components/PermissaoItem";
 import PermissaoForm from "../components/PermissaoForm";
+import PermissaoLista from "../components/PermissaoLista";
 
 function PermissoesPage() {
     const [permissoes, setPermissoes] = useState<Permissao[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
+    const [erroExclusao, setErroExclusao] = useState<string | null>(null);
     const [editando, setEditando] = useState<Permissao | null>(null);
 
     function carregarPermissoes() {
-        setLoading(true);
         api.get<Permissao[]>("/permissoes")
             .then((resposta) => {
                 setPermissoes(resposta.data);
@@ -30,12 +31,20 @@ function PermissoesPage() {
     }, []);
 
     async function excluir(id: number) {
-        await api.delete(`/permissoes/${id}`);
+        if (!window.confirm("Tem certeza que deseja excluir?")) return;
+        try {
+            await api.delete(`/permissoes/${id}`);
+            setErroExclusao(null);
+            if (editando?.id === id) setEditando(null);
+        } catch (e) {
+            const mensagem = axios.isAxiosError(e) ? e.response?.data?.message : null;
+            setErroExclusao(mensagem || "Não foi possível excluir a permissão.");
+        }
         carregarPermissoes();
     }
 
     if (loading) {
-        return <p className="state-message">Carregando permissões...</p>;
+        return <p className="state-message">Carregando...</p>;
     }
 
     if (erro) {
@@ -45,24 +54,17 @@ function PermissoesPage() {
     return (
         <>
             <PermissaoForm
-                key={editando?.id ?? "novo"}
                 permissaoEditando={editando}
+                onCancelar={() => setEditando(null)}
                 onPermissaoSalva={() => {
                     carregarPermissoes();
                     setEditando(null);
                 }}
             />
 
-            <ul className="list">
-                {permissoes.map((permissao) => (
-                    <PermissaoItem
-                        key={permissao.id}
-                        permissao={permissao}
-                        onEditar={() => setEditando(permissao)}
-                        onExcluir={() => excluir(permissao.id)}
-                    />
-                ))}
-            </ul>
+            {erroExclusao && <p className="state-error">{erroExclusao}</p>}
+
+            <PermissaoLista permissoes={permissoes} onEditar={setEditando} onExcluir={excluir} />
         </>
     );
 }

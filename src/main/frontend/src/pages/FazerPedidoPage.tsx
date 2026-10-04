@@ -5,11 +5,12 @@ import api from "../services/api";
 import type { Pedido } from "../types/Pedido";
 import type { Produto } from "../types/Produto";
 import { useProdutos, filtrarProdutos } from "../hooks/useProdutos";
-import { useCarrinho } from "../context/CarrinhoContext";
+import { useCarrinho } from "../context/useCarrinho";
 import { obterEmailLogado, obterUsuarioLogado } from "../services/auth";
 import Breadcrumb from "../components/Breadcrumb";
 import ProdutoCard from "../components/ProdutoCard";
-import CategoriaTabs, { CATEGORIAS } from "../components/CategoriaTabs";
+import CategoriaTabs from "../components/CategoriaTabs";
+import { CATEGORIAS } from "../utils/constantes";
 import { formatarMoeda } from "../utils/formatar";
 
 function FazerPedidoPage() {

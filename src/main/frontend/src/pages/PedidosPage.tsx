@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { CalendarDays, Eye, Search } from "lucide-react";
+import { CalendarDays, Eye, Search, Trash2 } from "lucide-react";
 import api from "../services/api";
 import type { Pedido } from "../types/Pedido";
 import Breadcrumb from "../components/Breadcrumb";
@@ -47,7 +47,7 @@ function PedidosPage() {
     const [dataInicio, setDataInicio] = useState(params.get("busca") ? "" : diaRelativo(1));
     const [dataFim, setDataFim] = useState(params.get("busca") ? "" : diaRelativo(0));
 
-    useEffect(() => {
+    function carregarPedidos() {
         api.get<Pedido[]>("/pedidos")
             .then((resposta) => {
                 setPedidos([...resposta.data].sort((a, b) => b.dataHora.localeCompare(a.dataHora)));
@@ -55,7 +55,21 @@ function PedidosPage() {
             })
             .catch(() => setErro("Não foi possível carregar os pedidos. Verifique se o back-end está rodando."))
             .finally(() => setLoading(false));
+    }
+
+    useEffect(() => {
+        carregarPedidos();
     }, []);
+
+    async function excluir(id: number) {
+        if (!window.confirm(`Excluir o pedido #${id}?`)) return;
+        try {
+            await api.delete(`/pedidos/${id}`);
+        } catch {
+            setErro("Não foi possível excluir o pedido.");
+        }
+        carregarPedidos();
+    }
 
     const pedidosFiltrados = useMemo(() => {
         const termo = busca.trim().toLowerCase().replace("#", "");
@@ -132,9 +146,14 @@ function PedidosPage() {
                                         <td>{formatarMoeda(pedido.total)}</td>
                                         <td><StatusBadge status={pedido.status} /></td>
                                         <td className="col-acoes">
-                                            <Link className="btn-icon" to={`/pedidos/${pedido.id}`} aria-label={`Ver pedido #${pedido.id}`}>
-                                                <Eye size={17} />
-                                            </Link>
+                                            <span className="acoes">
+                                                <Link className="btn-icon" to={`/pedidos/${pedido.id}`} aria-label={`Ver pedido #${pedido.id}`}>
+                                                    <Eye size={17} />
+                                                </Link>
+                                                <button className="btn-icon btn-icon-danger" onClick={() => excluir(pedido.id)} aria-label={`Excluir pedido #${pedido.id}`}>
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </span>
                                         </td>
                                     </tr>
                                 ))}

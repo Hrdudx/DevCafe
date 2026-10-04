@@ -2,10 +2,11 @@ import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ArrowRight, Coffee, Search, SlidersHorizontal } from "lucide-react";
 import { useProdutos, filtrarProdutos } from "../hooks/useProdutos";
-import { useCarrinho } from "../context/CarrinhoContext";
+import { useCarrinho } from "../context/useCarrinho";
 import Breadcrumb from "../components/Breadcrumb";
 import ProdutoCard from "../components/ProdutoCard";
-import CategoriaTabs, { CATEGORIAS } from "../components/CategoriaTabs";
+import CategoriaTabs from "../components/CategoriaTabs";
+import { CATEGORIAS } from "../utils/constantes";
 import { formatarMoeda } from "../utils/formatar";
 
 const ORDENACOES = [

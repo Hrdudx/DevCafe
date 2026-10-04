@@ -1,5 +1,6 @@
 package br.ueg.trindade.artifact.Web_2_fullstack.controller;
 
+import br.ueg.trindade.artifact.Web_2_fullstack.dto.NovoPedidoRequest;
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Pedido;
 import br.ueg.trindade.artifact.Web_2_fullstack.service.PedidoService;
 
@@ -34,8 +35,8 @@ public class PedidoController {
     }
 
     @PostMapping("/pedidos")
-    public Pedido createPedido(@RequestBody Map<Long, Integer> itens) {
-        return pedidoService.criar(itens);
+    public Pedido createPedido(@RequestBody NovoPedidoRequest dados) {
+        return pedidoService.criar(dados);
     }
 
     @PutMapping("/pedidos/{id}/status")

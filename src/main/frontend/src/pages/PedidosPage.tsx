@@ -1,116 +1,148 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { CalendarDays, Eye, Search } from "lucide-react";
 import api from "../services/api";
 import type { Pedido } from "../types/Pedido";
+import Breadcrumb from "../components/Breadcrumb";
 import StatusBadge from "../components/StatusBadge";
+import CategoriaTabs from "../components/CategoriaTabs";
+import { formatarDataHora, formatarMoeda, resumirItens } from "../utils/formatar";
 
 const ABAS = [
-    { chave: "TODOS", label: "Todos" },
-    { chave: "ANDAMENTO", label: "Em andamento" },
-    { chave: "CONCLUIDO", label: "Concluídos" },
-    { chave: "CANCELADO", label: "Cancelados" },
+    { valor: "TODOS", label: "Todos" },
+    { valor: "ANDAMENTO", label: "Em andamento" },
+    { valor: "CONCLUIDO", label: "Concluídos" },
+    { valor: "CANCELADO", label: "Cancelados" },
 ];
 
 function pertenceAba(status: string, aba: string) {
-    if (aba === "TODOS") return true;
     if (aba === "ANDAMENTO") return ["RECEBIDO", "EM_PREPARO", "PRONTO"].includes(status);
     if (aba === "CONCLUIDO") return status === "ENTREGUE";
     if (aba === "CANCELADO") return status === "CANCELADO";
     return true;
 }
 
-function formatarData(dataHora: string) {
-    return new Date(dataHora).toLocaleString("pt-BR");
+// "2026-10-04T10:24:00" -> "2026-10-04", no mesmo formato do <input type="date">.
+function diaDoPedido(dataHora: string) {
+    const data = new Date(dataHora);
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const dia = String(data.getDate()).padStart(2, "0");
+    return `${data.getFullYear()}-${mes}-${dia}`;
+}
+
+function diaRelativo(diasAtras: number) {
+    const data = new Date();
+    data.setDate(data.getDate() - diasAtras);
+    return diaDoPedido(data.toISOString());
 }
 
 function PedidosPage() {
+    const [params] = useSearchParams();
     const [pedidos, setPedidos] = useState<Pedido[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
-    const [aba, setAba] = useState("TODOS");
-    const [busca, setBusca] = useState("");
+    const [aba, setAba] = useState(params.get("aba") ?? "TODOS");
+    const [busca, setBusca] = useState(params.get("busca") ?? "");
+    // Por padrão mostra os pedidos de ontem e de hoje (quando a busca vem do topo, mostra todos).
+    const [dataInicio, setDataInicio] = useState(params.get("busca") ? "" : diaRelativo(1));
+    const [dataFim, setDataFim] = useState(params.get("busca") ? "" : diaRelativo(0));
 
     useEffect(() => {
         api.get<Pedido[]>("/pedidos")
             .then((resposta) => {
-                setPedidos(resposta.data.slice().reverse());
+                setPedidos([...resposta.data].sort((a, b) => b.dataHora.localeCompare(a.dataHora)));
                 setErro(null);
             })
-            .catch(() => setErro("Não foi possível carregar os pedidos."))
+            .catch(() => setErro("Não foi possível carregar os pedidos. Verifique se o back-end está rodando."))
             .finally(() => setLoading(false));
     }, []);
 
     const pedidosFiltrados = useMemo(() => {
+        const termo = busca.trim().toLowerCase().replace("#", "");
         return pedidos.filter((pedido) => {
-            const bateAba = pertenceAba(pedido.status, aba);
-            const bateBusca = busca === "" || String(pedido.id).includes(busca);
-            return bateAba && bateBusca;
+            const dia = diaDoPedido(pedido.dataHora);
+            const bateBusca =
+                termo === "" ||
+                String(pedido.id).includes(termo) ||
+                (pedido.cliente ?? "").toLowerCase().includes(termo);
+            return (
+                pertenceAba(pedido.status, aba) &&
+                bateBusca &&
+                (dataInicio === "" || dia >= dataInicio) &&
+                (dataFim === "" || dia <= dataFim)
+            );
         });
-    }, [pedidos, aba, busca]);
+    }, [pedidos, aba, busca, dataInicio, dataFim]);
 
     return (
         <div>
+            <Breadcrumb voltarPara="/" itens={[{ label: "Meus Pedidos" }]} />
             <h1 className="page-title">Meus Pedidos</h1>
-            <p className="page-subtitle">Acompanhe todos os pedidos realizados.</p>
+            <p className="page-subtitle">Acompanhe todos os seus pedidos realizados.</p>
 
-            <div className="toolbar toolbar-row">
-                <div className="category-tabs">
-                    {ABAS.map((a) => (
-                        <button
-                            key={a.chave}
-                            className={"category-tab" + (aba === a.chave ? " active" : "")}
-                            onClick={() => setAba(a.chave)}
-                        >
-                            {a.label}
-                        </button>
-                    ))}
+            <section className="panel">
+                <div className="toolbar">
+                    <CategoriaTabs opcoes={ABAS} selecionada={aba} onSelecionar={setAba} />
+                    <div className="toolbar-actions">
+                        <div className="date-range">
+                            <CalendarDays size={16} />
+                            <input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} aria-label="Data inicial" />
+                            <span>-</span>
+                            <input type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)} aria-label="Data final" />
+                        </div>
+                        <label className="search-field">
+                            <Search size={16} />
+                            <input
+                                type="search"
+                                placeholder="Buscar por número ou cliente..."
+                                value={busca}
+                                onChange={(e) => setBusca(e.target.value)}
+                            />
+                        </label>
+                    </div>
                 </div>
-                <input
-                    className="topbar-search"
-                    type="search"
-                    placeholder="Buscar por número do pedido..."
-                    value={busca}
-                    onChange={(e) => setBusca(e.target.value)}
-                />
-            </div>
 
-            {loading && <p className="state-message">Carregando pedidos...</p>}
-            {erro && <p className="state-error">{erro}</p>}
+                {loading && <p className="state-message">Carregando pedidos...</p>}
+                {erro && <p className="state-error">{erro}</p>}
+                {!loading && !erro && pedidosFiltrados.length === 0 && (
+                    <p className="state-message">Nenhum pedido encontrado.</p>
+                )}
 
-            {!loading && !erro && pedidosFiltrados.length === 0 && (
-                <p className="state-message">Nenhum pedido encontrado.</p>
-            )}
-
-            {!loading && !erro && pedidosFiltrados.length > 0 && (
-                <div className="panel">
-                    <table className="data-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Data</th>
-                                <th>Itens</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {pedidosFiltrados.map((pedido) => (
-                                <tr key={pedido.id}>
-                                    <td>#{pedido.id}</td>
-                                    <td>{formatarData(pedido.dataHora)}</td>
-                                    <td>{pedido.itens.map((item) => item.produto.nome).join(", ")}</td>
-                                    <td>R$ {pedido.total.toFixed(2)}</td>
-                                    <td><StatusBadge status={pedido.status} /></td>
-                                    <td>
-                                        <Link className="btn-icon" to={`/pedidos/${pedido.id}`} aria-label="Ver pedido">👁️</Link>
-                                    </td>
+                {!loading && !erro && pedidosFiltrados.length > 0 && (
+                    <div className="table-wrap">
+                        <table className="data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Data</th>
+                                    <th>Cliente</th>
+                                    <th>Itens</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th className="col-acoes">Ações</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                            </thead>
+                            <tbody>
+                                {pedidosFiltrados.map((pedido) => (
+                                    <tr key={pedido.id}>
+                                        <td className="col-id">#{pedido.id}</td>
+                                        <td className="col-muted">{formatarDataHora(pedido.dataHora)}</td>
+                                        <td>{pedido.cliente ?? "—"}</td>
+                                        <td className="col-itens">{resumirItens(pedido.itens)}</td>
+                                        <td>{formatarMoeda(pedido.total)}</td>
+                                        <td><StatusBadge status={pedido.status} /></td>
+                                        <td className="col-acoes">
+                                            <Link className="btn-icon" to={`/pedidos/${pedido.id}`} aria-label={`Ver pedido #${pedido.id}`}>
+                                                <Eye size={17} />
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </section>
         </div>
     );
 }

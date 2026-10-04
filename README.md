@@ -20,18 +20,21 @@ Este projeto nasceu a partir dos estudos da disciplina **Programação Web II** 
 
 ## Funcionalidades atuais
 
-- CRUD completo (criar, listar, editar, excluir) de:
-  - **Usuários** (nome, username, e-mail, senha protegida)
-  - **Permissões** (nome, descrição)
-  - **Produtos** (nome, descrição, preço) — base do cardápio da cafeteria
-- API REST (`/api/usuarios`, `/api/permissoes`, `/api/produtos`)
-- CORS configurado para o front-end em desenvolvimento
-- Interface React com formulários controlados e listagens com loading/erro
+- **Login** (tela pronta; a validação real de credenciais ainda é um próximo passo)
+- **Início**: indicadores do dia (pedidos, faturamento, produtos vendidos, clientes) comparados com o dia anterior, destaque de novidade e pedidos recentes
+- **Cardápio** com filtro por categoria, busca, ordenação e favoritos
+- **Fazer Pedido**: carrinho com quantidades, observações e finalização do pedido
+- **Meus Pedidos**: filtro por situação, período e busca por número ou cliente
+- **Detalhe do pedido**: cliente, endereço, forma de pagamento, itens, alteração de status e impressão
+- **Clientes** e **Relatórios** gerados a partir dos pedidos
+- **Usuários** e **Configurações** (cadastro de produtos e permissões)
+- API REST (`/api/usuarios`, `/api/permissoes`, `/api/produtos`, `/api/pedidos`)
+- Produtos e pedidos de exemplo carregados automaticamente no primeiro start (`data.sql`)
 
 ## Próximos passos
 
-- Entidade de **Pedido** (relacionando usuário + produtos)
 - Autenticação e autorização com Spring Security + JWT
+- Cadastro de promoções
 - Painel de acompanhamento de pedidos em tempo real
 
 ## Como rodar o projeto

@@ -1,5 +1,6 @@
 package br.ueg.trindade.artifact.Web_2_fullstack.service;
 
+import br.ueg.trindade.artifact.Web_2_fullstack.dto.NovoPedidoRequest;
 import br.ueg.trindade.artifact.Web_2_fullstack.model.ItemPedido;
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Pedido;
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Produto;
@@ -31,7 +32,8 @@ public class PedidoService {
                 .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
     }
 
-    public Pedido criar(Map<Long, Integer> quantidadePorProdutoId) {
+    public Pedido criar(NovoPedidoRequest dados) {
+        Map<Long, Integer> quantidadePorProdutoId = dados.getItens();
         if (quantidadePorProdutoId == null || quantidadePorProdutoId.isEmpty()) {
             throw new RuntimeException("O pedido precisa ter ao menos um item");
         }
@@ -39,6 +41,11 @@ public class PedidoService {
         Pedido pedido = new Pedido();
         pedido.setDataHora(LocalDateTime.now());
         pedido.setStatus("RECEBIDO");
+        pedido.setCliente(dados.getCliente());
+        pedido.setTelefone(dados.getTelefone());
+        pedido.setEmail(dados.getEmail());
+        pedido.setObservacoes(dados.getObservacoes());
+        pedido.setFormaPagamento(dados.getFormaPagamento());
 
         double total = 0.0;
         for (Map.Entry<Long, Integer> entrada : quantidadePorProdutoId.entrySet()) {

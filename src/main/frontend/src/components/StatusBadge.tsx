@@ -1,4 +1,4 @@
-const STATUS_INFO: Record<string, { label: string; className: string }> = {
+export const STATUS_INFO: Record<string, { label: string; className: string }> = {
     RECEBIDO: { label: "Recebido", className: "badge-info" },
     EM_PREPARO: { label: "Em preparo", className: "badge-warning" },
     PRONTO: { label: "Pronto", className: "badge-info" },

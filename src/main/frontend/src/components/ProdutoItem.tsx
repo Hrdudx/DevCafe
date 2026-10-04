@@ -1,4 +1,5 @@
 import type { Produto } from "../types/Produto";
+import { formatarMoeda } from "../utils/formatar";
 
 interface ProdutoItemProps {
     produto: Produto;
@@ -10,7 +11,7 @@ function ProdutoItem({ produto, onEditar, onExcluir }: ProdutoItemProps) {
     return (
         <li className="list-item">
             <span className="list-item-info">
-                <strong>{produto.nome}</strong> — {produto.descricao} (R$ {produto.preco.toFixed(2)})
+                <strong>{produto.nome}</strong> — {produto.descricao} ({formatarMoeda(produto.preco)})
             </span>
             <span className="list-item-actions">
                 {onEditar && <button className="btn btn-edit" onClick={onEditar}>Editar</button>}

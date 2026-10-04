@@ -826,34 +826,6 @@ button.btn-icon {
   accent-color: var(--primary);
 }
 
-.login-divider {
-  text-align: center;
-  color: var(--text-soft);
-  font-size: 13px;
-  margin: 22px 0 16px;
-}
-
-.btn-google {
-  background: var(--surface);
-  color: var(--text);
-  border-color: var(--border-strong);
-}
-
-.btn-google:hover {
-  background: var(--surface-muted);
-}
-
-.login-signup {
-  margin-top: 36px;
-  text-align: center;
-  font-size: 14px;
-  color: var(--text);
-}
-
-.login-signup .link {
-  font-size: 14px;
-}
-
 /* ---------- Início ---------- */
 
 .stats-grid {

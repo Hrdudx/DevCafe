@@ -12,5 +12,10 @@ export interface Pedido {
     dataHora: string;
     status: string;
     total: number;
+    cliente?: string;
+    telefone?: string;
+    email?: string;
+    observacoes?: string;
+    formaPagamento?: string;
     itens: ItemPedido[];
 }

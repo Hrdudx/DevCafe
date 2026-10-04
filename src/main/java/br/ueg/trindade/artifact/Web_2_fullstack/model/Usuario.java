@@ -1,6 +1,6 @@
 package br.ueg.trindade.artifact.Web_2_fullstack.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +16,8 @@ public class Usuario {
     private String nome;
     private String username;
 
-    @JsonIgnore
+    // A senha pode ser enviada pelo front-end (cadastro), mas nunca volta nas respostas.
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
     private String email;

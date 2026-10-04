@@ -65,16 +65,46 @@ Acesse **http://localhost:5173** e entre com **`admin@devcafe.com`** / **`admin1
 > Se o login mostrar *"Não foi possível entrar. Verifique se o back-end está rodando"*, o Terminal 1
 > ainda não terminou de subir ou foi fechado.
 
-## 2. Como testar o CRUD no navegador
+## 2. Roteiro de teste
 
-| Entidade | Tela (menu) | O que fazer |
-|---|---|---|
-| **Usuário** | Usuários | Preencher o formulário e **Cadastrar** → aparece na lista → **Editar** (o formulário é preenchido) → **Salvar alterações** → **Excluir** |
-| **Permissão** | Configurações → aba Permissões (ou `/permissoes`) | Mesmo fluxo: cadastrar → listar → editar → excluir |
-| **Produto** (entidade própria) | Configurações → aba Produtos (ou `/produtos`) | Mesmo fluxo. O produto cadastrado aparece no **Cardápio** |
-| **Pedido** (entidade própria) | Fazer Pedido → Meus Pedidos | Adicionar produtos com **+** e **Finalizar Pedido** → ver em **Meus Pedidos** → abrir (👁) e trocar o **status** no selo ao lado do título → excluir pela lixeira |
+Com o back-end e o front-end rodando (seção 1), siga os passos abaixo no navegador.
+Leva cerca de 10 minutos e cobre todos os itens da checklist.
 
-Após cada operação a lista é recarregada a partir da API.
+### 2.1 Login
+1. A tela de login mostra e-mail, senha e o botão **Entrar**.
+2. Digite uma senha errada: aparece *"E-mail ou senha inválidos"*.
+3. Entre com **`admin@devcafe.com`** / **`admin123`**: abre a tela **Início**, com indicadores do dia e pedidos recentes.
+
+### 2.2 Usuário — menu **Usuários**
+1. Preencha nome, username, e-mail e senha e clique em **Cadastrar**: o usuário aparece na lista.
+2. Clique em **Editar**: o formulário é preenchido com os dados. Altere o nome e clique em **Salvar alterações**: a lista é atualizada.
+3. Clique no nome do usuário logado (canto superior direito) → **Sair** e entre com o usuário recém-criado: o login funciona.
+4. Saia, entre de novo como admin, clique em **Excluir** no usuário de teste e confirme: ele some da lista.
+
+> A senha não aparece em nenhuma resposta da API: confira em `http://localhost:8080/api/usuarios`.
+
+### 2.3 Permissão — menu **Configurações** → aba **Permissões**
+1. **Cadastrar** uma permissão → aparece na lista.
+2. **Editar** → alterar a descrição → **Salvar alterações**.
+3. **Excluir** → some da lista.
+
+### 2.4 Produto (entidade própria) — menu **Configurações** → aba **Produtos**
+1. **Cadastrar** um produto com nome, descrição, preço e categoria → aparece na lista e também no menu **Cardápio**.
+2. **Editar** o preço → a lista mostra o novo valor.
+3. **Excluir** o produto de teste → some da lista.
+4. Regra de negócio: tente **Excluir** o *Cappuccino* → aparece *"Este produto já aparece em pedidos e não pode ser excluído"*.
+5. Regra de negócio: tente cadastrar um produto com preço `0` → o cadastro é recusado.
+
+### 2.5 Pedido (entidade própria) — menus **Fazer Pedido** e **Meus Pedidos**
+1. Em **Fazer Pedido**, clique no **+** de alguns produtos: o carrinho à direita mostra itens, quantidades e total.
+2. Clique em **Finalizar Pedido**: abre o detalhe do pedido criado.
+3. No selo de status ao lado do título, escolha outro status (ex.: *Em preparo*): o pedido é atualizado.
+4. Em **Meus Pedidos**, o pedido aparece na lista (teste as abas, o filtro de datas e a busca por número ou cliente).
+5. Clique na **lixeira** do pedido de teste e confirme: ele some da lista.
+
+### 2.6 Banco de dados (opcional)
+Abra `http://localhost:8080/h2-console`, use a JDBC URL `jdbc:h2:file:./database.db`, usuário `sa` e senha em branco.
+As tabelas `USUARIO`, `PERMISSAO`, `PRODUTO`, `PEDIDO` e `ITEM_PEDIDO` mostram os dados gravados pelas telas.
 
 ## 3. Checklist da Avaliação N1
 

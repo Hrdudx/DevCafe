@@ -34,6 +34,12 @@ npm run dev
 
 Depois acesse **http://localhost:5173** no navegador.
 
+> Se a porta 5173 estiver ocupada, o Vite usa a próxima (5174, 5175…) e mostra o endereço no terminal.
+> O back-end aceita o front-end em qualquer porta do `localhost`.
+>
+> Se o login mostrar *"Não foi possível entrar. Verifique se o back-end está rodando"*, confira se o
+> Terminal 1 está com o back-end no ar (`http://localhost:8080/api/produtos` deve abrir uma lista).
+
 ## 2. Login
 
 Na primeira vez que o back-end sobe, um administrador é criado automaticamente:

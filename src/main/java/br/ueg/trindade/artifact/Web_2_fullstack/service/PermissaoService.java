@@ -2,6 +2,7 @@ package br.ueg.trindade.artifact.Web_2_fullstack.service;
 
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Permissao;
 import br.ueg.trindade.artifact.Web_2_fullstack.repository.PermissaoRepository;
+import br.ueg.trindade.artifact.Web_2_fullstack.repository.UsuarioRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,9 +14,11 @@ import java.util.List;
 public class PermissaoService {
 
     private final PermissaoRepository permissaoRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public PermissaoService(PermissaoRepository permissaoRepository) {
+    public PermissaoService(PermissaoRepository permissaoRepository, UsuarioRepository usuarioRepository) {
         this.permissaoRepository = permissaoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public List<Permissao> listarTodos() {
@@ -44,6 +47,11 @@ public class PermissaoService {
 
     public void excluir(Long id) {
         buscarPorId(id);
+        // Uma permissão em uso deixaria usuários sem o perfil sem que ninguém percebesse.
+        if (usuarioRepository.existsByPermissoesId(id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Esta permissão está atribuída a usuários e não pode ser excluída");
+        }
         permissaoRepository.deleteById(id);
     }
 

@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import type { Usuario } from "../types/Usuario";
 import UsuarioForm from "../components/UsuarioForm";
 import UsuarioLista from "../components/UsuarioLista";
 
 function UsuariosPage() {
+    const navigate = useNavigate();
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
@@ -65,7 +67,12 @@ function UsuariosPage() {
 
             {erroExclusao && <p className="state-error">{erroExclusao}</p>}
 
-            <UsuarioLista usuarios={usuarios} onEditar={setEditando} onExcluir={excluir} />
+            <UsuarioLista
+                usuarios={usuarios}
+                onEditar={setEditando}
+                onExcluir={excluir}
+                onPermissoes={(id) => navigate(`/usuarios/permissoes?usuario=${id}`)}
+            />
         </>
     );
 }

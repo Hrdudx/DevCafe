@@ -50,4 +50,16 @@ public class UsuarioController {
     public void deleteUsuario(@PathVariable Long id) {
         usuarioService.excluir(id);
     }
+
+    // GET /api/usuarios/{id}/permissoes — usuário com as permissões que ele já tem
+    @GetMapping("/{id}/permissoes")
+    public Usuario getPermissoes(@PathVariable Long id) {
+        return usuarioService.buscarPorId(id);
+    }
+
+    // PUT /api/usuarios/{id}/permissoes — salva a nova seleção (ex.: [1, 2])
+    @PutMapping("/{id}/permissoes")
+    public Usuario atualizarPermissoes(@PathVariable Long id, @RequestBody List<Long> idsPermissoes) {
+        return usuarioService.atribuirPermissoes(id, idsPermissoes);
+    }
 }

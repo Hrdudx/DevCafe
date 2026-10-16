@@ -34,6 +34,15 @@ export function obterUsuarioLogado(): string {
     return usuario?.nome.split(" ")[0] || "Visitante";
 }
 
+// Perfil exibido no topo da tela, a partir das permissões do usuário logado.
+export function obterPerfilLogado(): string {
+    const permissoes = obterUsuario()?.permissoes ?? [];
+    if (permissoes.some((p) => p.nome === "ADMIN")) return "Administrador";
+    if (permissoes.length === 0) return "Equipe";
+    const nome = permissoes[0].nome.toLowerCase();
+    return nome.charAt(0).toUpperCase() + nome.slice(1);
+}
+
 export function obterEmailLogado(): string {
     return obterUsuario()?.email ?? "";
 }

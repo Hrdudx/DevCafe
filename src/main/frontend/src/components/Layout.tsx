@@ -19,7 +19,7 @@ import {
 import api from "../services/api";
 import type { Pedido } from "../types/Pedido";
 import type { Produto } from "../types/Produto";
-import { obterUsuario, obterUsuarioLogado, sair } from "../services/auth";
+import { obterPerfilLogado, obterUsuario, obterUsuarioLogado, sair } from "../services/auth";
 
 const navItens = [
     { to: "/", label: "Início", icon: House },
@@ -133,7 +133,7 @@ function Layout() {
                                 <span className="topbar-avatar">{usuario.charAt(0).toUpperCase()}</span>
                                 <span className="topbar-user-text">
                                     <strong>{usuario}</strong>
-                                    <small>Administradora</small>
+                                    <small>{obterPerfilLogado()}</small>
                                 </span>
                             </button>
                             {menuUsuario && (

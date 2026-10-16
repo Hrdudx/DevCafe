@@ -5,9 +5,10 @@ interface UsuarioListaProps {
     usuarios: Usuario[];
     onEditar: (usuario: Usuario) => void;
     onExcluir: (id: number) => void;
+    onPermissoes: (id: number) => void;
 }
 
-function UsuarioLista({ usuarios, onEditar, onExcluir }: UsuarioListaProps) {
+function UsuarioLista({ usuarios, onEditar, onExcluir, onPermissoes }: UsuarioListaProps) {
     if (usuarios.length === 0) {
         return <p className="state-message">Nenhum cadastro ainda.</p>;
     }
@@ -20,6 +21,7 @@ function UsuarioLista({ usuarios, onEditar, onExcluir }: UsuarioListaProps) {
                     usuario={usuario}
                     onEditar={() => onEditar(usuario)}
                     onExcluir={() => onExcluir(usuario.id)}
+                    onPermissoes={() => onPermissoes(usuario.id)}
                 />
             ))}
         </ul>

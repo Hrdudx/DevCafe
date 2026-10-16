@@ -15,6 +15,7 @@ import PromocoesPage from "./pages/PromocoesPage";
 import ConfiguracoesPage from "./pages/ConfiguracoesPage";
 import UsuariosPage from "./pages/UsuariosPage";
 import PermissoesPage from "./pages/PermissoesPage";
+import UsuarioPermissoesPage from "./pages/UsuarioPermissoesPage";
 import ProdutosPage from "./pages/ProdutosPage";
 
 function App() {
@@ -37,6 +38,17 @@ function App() {
                         element={
                             <PaginaCadastro titulo="Usuários" subtitulo="Cadastre e gerencie quem usa o sistema.">
                                 <UsuariosPage />
+                            </PaginaCadastro>
+                        }
+                    />
+                    <Route
+                        path="usuarios/permissoes"
+                        element={
+                            <PaginaCadastro
+                                titulo="Permissões da equipe"
+                                subtitulo="Escolha um usuário e marque os perfis de acesso dele."
+                            >
+                                <UsuarioPermissoesPage />
                             </PaginaCadastro>
                         }
                     />

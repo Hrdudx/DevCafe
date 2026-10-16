@@ -1,3 +1,17 @@
+-- Perfis de acesso da equipe da cafeteria, atribuídos aos usuários na tela "Acessos da equipe".
+
+INSERT INTO permissao (nome, descricao)
+SELECT 'ADMIN', 'Acesso total: cadastros, relatórios e configurações'
+WHERE NOT EXISTS (SELECT 1 FROM permissao WHERE nome = 'ADMIN');
+
+INSERT INTO permissao (nome, descricao)
+SELECT 'ATENDENTE', 'Registra pedidos e atende os clientes no balcão'
+WHERE NOT EXISTS (SELECT 1 FROM permissao WHERE nome = 'ATENDENTE');
+
+INSERT INTO permissao (nome, descricao)
+SELECT 'BARISTA', 'Prepara as bebidas e atualiza o status dos pedidos'
+WHERE NOT EXISTS (SELECT 1 FROM permissao WHERE nome = 'BARISTA');
+
 INSERT INTO produto (nome, descricao, preco, categoria, imagem_url)
 SELECT 'Cappuccino', 'Café espresso com leite cremoso e canela', 9.90, 'Cafés', 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=400&q=80'
 WHERE NOT EXISTS (SELECT 1 FROM produto WHERE nome = 'Cappuccino');

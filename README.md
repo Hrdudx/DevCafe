@@ -4,7 +4,8 @@ Sistema de pedidos para cafeteria, desenvolvido para a **Avaliação N1 de Desen
 Back-end em **Java + Spring Boot** e front-end em **React + TypeScript**, integrados de ponta a ponta
 (React → API REST → banco H2).
 
-- **Projeto-base (Aulas 01 a 06):** CRUD de `Usuario` e `Permissao` em camadas (Controller → Service → Repository).
+- **Projeto-base (Aulas 01 a 07):** CRUD de `Usuario` e `Permissao` em camadas (Controller → Service → Repository)
+  e relacionamento muitos-para-muitos entre eles: cada membro da equipe recebe perfis como `ADMIN`, `ATENDENTE` e `BARISTA`.
 - **Funcionalidades próprias:** entidades `Produto` (cardápio) e `Pedido` (com `ItemPedido`), com CRUD completo,
   além de login, painel inicial, cardápio, carrinho e acompanhamento de pedidos.
 
@@ -17,7 +18,7 @@ Back-end em **Java + Spring Boot** e front-end em **React + TypeScript**, integr
 | **`admin@devcafe.com`** | **`admin123`** |
 
 Esse usuário é criado automaticamente na primeira vez que o back-end sobe.
-Também são carregados **produtos e pedidos de exemplo** (`src/main/resources/data.sql`), para as telas não começarem vazias.
+Ele já vem com o perfil `ADMIN`. Também são carregados os **perfis da equipe** (`ADMIN`, `ATENDENTE`, `BARISTA`) e **produtos e pedidos de exemplo** (`src/main/resources/data.sql`), para as telas não começarem vazias.
 Usuários novos cadastrados na tela **Usuários** (com senha) também conseguem fazer login.
 
 ## 1. Como rodar
@@ -87,24 +88,36 @@ Leva cerca de 10 minutos e cobre todos os itens da checklist.
 1. **Cadastrar** uma permissão → aparece na lista.
 2. **Editar** → alterar a descrição → **Salvar alterações**.
 3. **Excluir** → some da lista.
+4. Regra de negócio: tente **Excluir** a permissão *ADMIN* → aparece *"Esta permissão está atribuída a usuários e não pode ser excluída"*.
 
-### 2.4 Produto (entidade própria) — menu **Configurações** → aba **Produtos**
+### 2.4 Permissões da equipe (Aula 07: muitos-para-muitos) — menu **Usuários** → botão **Permissões**
+1. Cadastre um usuário (ex.: *Ana*) e clique em **Permissões** na linha dele: abre a tela **Permissões da equipe** já com ele selecionado.
+2. Marque *ATENDENTE* e *BARISTA* e clique em **Salvar permissões**: aparece *"Permissões salvas!"*.
+3. Volte em **Usuários**: os perfis aparecem como etiquetas ao lado do nome.
+4. Escolha outro usuário no seletor: os checkboxes mostram as permissões dele. A mesma tela fica em **Configurações** → aba **Permissões da equipe**.
+5. Saia e entre como o usuário: o perfil aparece no canto superior direito.
+
+> Confira em `http://localhost:8080/api/usuarios/{id}/permissoes`: o usuário vem com a lista `permissoes`,
+> e em `/api/permissoes` as permissões não trazem os usuários de volta (sem recursão infinita).
+
+### 2.5 Produto (entidade própria) — menu **Configurações** → aba **Produtos**
 1. **Cadastrar** um produto com nome, descrição, preço e categoria → aparece na lista e também no menu **Cardápio**.
 2. **Editar** o preço → a lista mostra o novo valor.
 3. **Excluir** o produto de teste → some da lista.
 4. Regra de negócio: tente **Excluir** o *Cappuccino* → aparece *"Este produto já aparece em pedidos e não pode ser excluído"*.
 5. Regra de negócio: tente cadastrar um produto com preço `0` → o cadastro é recusado.
 
-### 2.5 Pedido (entidade própria) — menus **Fazer Pedido** e **Meus Pedidos**
+### 2.6 Pedido (entidade própria) — menus **Fazer Pedido** e **Meus Pedidos**
 1. Em **Fazer Pedido**, clique no **+** de alguns produtos: o carrinho à direita mostra itens, quantidades e total.
 2. Clique em **Finalizar Pedido**: abre o detalhe do pedido criado.
 3. No selo de status ao lado do título, escolha outro status (ex.: *Em preparo*): o pedido é atualizado.
 4. Em **Meus Pedidos**, o pedido aparece na lista (teste as abas, o filtro de datas e a busca por número ou cliente).
 5. Clique na **lixeira** do pedido de teste e confirme: ele some da lista.
 
-### 2.6 Banco de dados (opcional)
+### 2.7 Banco de dados (opcional)
 Abra `http://localhost:8080/h2-console`, use a JDBC URL `jdbc:h2:file:./database.db`, usuário `sa` e senha em branco.
-As tabelas `USUARIO`, `PERMISSAO`, `PRODUTO`, `PEDIDO` e `ITEM_PEDIDO` mostram os dados gravados pelas telas.
+As tabelas `USUARIO`, `PERMISSAO`, `USUARIO_PERMISSAO` (tabela de junção do muitos-para-muitos), `PRODUTO`, `PEDIDO` e `ITEM_PEDIDO`
+mostram os dados gravados pelas telas.
 
 ## 3. Checklist da Avaliação N1
 
@@ -129,11 +142,20 @@ As tabelas `USUARIO`, `PERMISSAO`, `PRODUTO`, `PEDIDO` e `ITEM_PEDIDO` mostram o
 | Pacotes `controller`, `service`, `repository`, `model` | pastas com esses nomes |
 | Controllers com `@RestController` em `/api`, GET/POST/PUT/DELETE com `@PathVariable`, acessando apenas o Service | `controller/` |
 | Regras de negócio no Service | `service/` (ver lista abaixo) |
+| Relacionamento muitos-para-muitos `Usuario` ↔ `Permissao` (Aula 07) | `model/Usuario.java` — `@ManyToMany` + `@JoinTable(name = "usuario_permissao")`; `model/Permissao.java` — lado inverso `@ManyToMany(mappedBy = "permissoes")` |
+| Sem recursão infinita no JSON | `model/Permissao.java` — `@JsonIgnore` em `usuarios` (ver observação abaixo) |
+| Atribuir permissões ao usuário | `UsuarioService.atribuirPermissoes` (`@Transactional`) + `GET` e `PUT /api/usuarios/{id}/permissoes` no `UsuarioController` |
+| Outros relacionamentos | `Pedido` `@OneToMany` → `ItemPedido` `@ManyToOne` → `Produto` |
+
+> **Observação sobre a Aula 07:** o slide sugere `@JsonManagedReference` / `@JsonBackReference`. Com eles o JSON
+> sai certo, mas o cadastro de usuário (`POST /api/usuarios`) falha com erro 500: o Jackson só aceita
+> `@JsonBackReference` em um objeto único, e aqui o lado de volta é uma coleção (`Set<Usuario>`). Por isso foi usado
+> `@JsonIgnore` no lado inverso, que corta a "volta" do mesmo jeito.
 
 **Regras de negócio implementadas nos Services**
 
-- `UsuarioService`: e-mail único, senha obrigatória no cadastro (criptografada), senha em branco na edição mantém a atual, login por e-mail e senha.
-- `PermissaoService`: nome obrigatório.
+- `UsuarioService`: e-mail único, senha obrigatória no cadastro (criptografada), senha em branco na edição mantém a atual, login por e-mail e senha, atribuição de permissões só com permissões existentes.
+- `PermissaoService`: nome obrigatório, permissão atribuída a algum usuário não pode ser excluída.
 - `ProdutoService`: nome obrigatório, preço maior que zero, produto que já aparece em pedidos não pode ser excluído.
 - `PedidoService`: pedido precisa ter ao menos um item, quantidade maior que zero, total calculado pelo back-end com o preço do produto, status só aceita valores válidos.
 
@@ -148,6 +170,7 @@ As tabelas `USUARIO`, `PERMISSAO`, `PRODUTO`, `PEDIDO` e `ITEM_PEDIDO` mostram o
 | `App.tsx` apenas renderizando as páginas | `App.tsx` (só declara as rotas) |
 | Botões **Editar** e **Excluir**, recarregando a lista | componentes `*Item.tsx` + função `carregar...()` nas páginas |
 | CRUD completo no navegador para `Usuario`, `Permissao` e entidade própria | ver seção 2 |
+| Tela de atribuição de permissões (select de usuários + checkboxes) | `pages/UsuarioPermissoesPage.tsx`, com `permissoes?` em `types/Usuario.ts` |
 | Aplicação de ponta a ponta (React → API → H2) | ver seções 1 e 2 |
 
 ## 4. Endpoints da API
@@ -160,6 +183,9 @@ Base: `http://localhost:8080/api`
 | Permissões | `/permissoes` | `/permissoes/{id}` | `/permissoes` | `/permissoes/{id}` | `/permissoes/{id}` |
 | Produtos | `/produtos` | `/produtos/{id}` | `/produtos` | `/produtos/{id}` | `/produtos/{id}` |
 | Pedidos | `/pedidos` | `/pedidos/{id}` | `/pedidos` | `/pedidos/{id}/status` | `/pedidos/{id}` |
+
+Permissões do usuário (Aula 07): `GET /api/usuarios/{id}/permissoes` e `PUT /api/usuarios/{id}/permissoes`
+com a lista de ids no corpo (ex.: `[2, 3]`).
 
 Login: `POST /api/auth/login` com `{ "email": "...", "senha": "..." }`.
 
@@ -181,6 +207,7 @@ O console do banco H2 fica em `http://localhost:8080/h2-console`
 | Cardápio | Produtos por categoria, busca, ordenação e favoritos |
 | Clientes / Relatórios | Informações geradas a partir dos pedidos |
 | Usuários / Configurações | Cadastros de usuários, produtos e permissões |
+| Permissões da equipe | Escolha de um usuário e marcação dos perfis dele (ADMIN, ATENDENTE, BARISTA…) |
 
 ## 6. Estrutura do projeto
 

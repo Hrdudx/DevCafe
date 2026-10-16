@@ -644,6 +644,79 @@ button.btn-icon {
   font-size: 14px;
 }
 
+.state-success {
+  background: var(--success-bg);
+  color: var(--success-text);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ---------- Permissões da equipe ---------- */
+
+.atribuir-permissoes {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 560px;
+}
+
+.permissoes-opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.permissoes-opcoes:disabled {
+  opacity: 0.55;
+}
+
+.permissao-opcao {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.permissao-opcao:hover {
+  border-color: var(--primary);
+}
+
+.permissao-opcao input {
+  margin-top: 3px;
+  accent-color: var(--primary);
+}
+
+.permissao-opcao span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.permissao-opcao strong {
+  color: var(--text);
+}
+
+.permissao-opcao small {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.perfil-tags {
+  display: inline-flex;
+  gap: 6px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
 /* ---------- Status ---------- */
 
 .status-badge {

@@ -1,23 +1,31 @@
 package br.ueg.trindade.artifact.Web_2_fullstack.service;
 
+import br.ueg.trindade.artifact.Web_2_fullstack.model.Permissao;
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Usuario;
+import br.ueg.trindade.artifact.Web_2_fullstack.repository.PermissaoRepository;
 import br.ueg.trindade.artifact.Web_2_fullstack.repository.UsuarioRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PermissaoRepository permissaoRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PermissaoRepository permissaoRepository,
+                          PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.permissaoRepository = permissaoRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -51,6 +59,21 @@ public class UsuarioService {
             usuario.setSenha(passwordEncoder.encode(usuarioAtualizado.getSenha()));
         }
 
+        return usuarioRepository.save(usuario);
+    }
+
+    // Substitui as permissões do usuário pela nova seleção; o save() grava a tabela usuario_permissao.
+    @Transactional
+    public Usuario atribuirPermissoes(Long usuarioId, List<Long> idsPermissoes) {
+        Usuario usuario = buscarPorId(usuarioId);
+        List<Long> ids = idsPermissoes == null ? List.of() : idsPermissoes;
+
+        Set<Permissao> permissoes = new HashSet<>(permissaoRepository.findAllById(ids));
+        if (permissoes.size() != new HashSet<>(ids).size()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Uma ou mais permissões não foram encontradas");
+        }
+
+        usuario.setPermissoes(permissoes);
         return usuarioRepository.save(usuario);
     }
 

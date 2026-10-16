@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import type { Usuario } from "../types/Usuario";
 
@@ -17,6 +18,7 @@ function UsuarioForm({ onUsuarioSalvo, onCancelar, usuarioEditando, usuariosExis
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [erro, setErro] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     // Quando o usuário clica em "Editar", preenche o formulário com os dados do item.
     // A senha nunca vem do back-end, então começa sempre em branco.
@@ -67,6 +69,8 @@ function UsuarioForm({ onUsuarioSalvo, onCancelar, usuarioEditando, usuariosExis
             }
             setErro(null);
             onUsuarioSalvo();
+            // Volta para a lista limpa (sem o ?editar= de quem veio do detalhe).
+            navigate("/usuarios");
         } catch (e) {
             const mensagem = axios.isAxiosError(e) ? e.response?.data?.message : null;
             setErro(mensagem || "Não foi possível salvar o usuário. Verifique os dados e tente novamente.");

@@ -19,7 +19,10 @@ function ConfiguracoesPage() {
             <p className="page-subtitle">Gerencie os produtos do cardápio e os perfis de acesso.</p>
 
             <CategoriaTabs opcoes={ABAS} selecionada={aba} onSelecionar={setAba} />
-            <section className="panel">{aba === "produtos" ? <ProdutosPage /> : <PermissoesPage />}</section>
+            <section className="panel">
+                {aba === "produtos" && <ProdutosPage />}
+                {aba === "permissoes" && <PermissoesPage />}
+            </section>
         </div>
     );
 }

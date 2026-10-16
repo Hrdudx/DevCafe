@@ -8,9 +8,11 @@ import {
     Coffee,
     FileText,
     House,
+    KeyRound,
     LogOut,
     Search,
     Settings,
+    ShieldCheck,
     ShoppingCart,
     Star,
     UserRound,
@@ -19,7 +21,7 @@ import {
 import api from "../services/api";
 import type { Pedido } from "../types/Pedido";
 import type { Produto } from "../types/Produto";
-import { obterUsuario, obterUsuarioLogado, sair } from "../services/auth";
+import { obterPerfilLogado, obterUsuario, obterUsuarioLogado, sair } from "../services/auth";
 
 const navItens = [
     { to: "/", label: "Início", icon: House },
@@ -29,7 +31,13 @@ const navItens = [
     { to: "/clientes", label: "Clientes", icon: UserRound },
     { to: "/relatorios", label: "Relatórios", icon: FileText },
     { to: "/promocoes", label: "Promoções", icon: Star },
+];
+
+// Telas de cadastro da equipe (Aulas 05 a 08), agrupadas no menu.
+const navEquipe = [
     { to: "/usuarios", label: "Usuários", icon: UsersRound },
+    { to: "/permissoes", label: "Permissões", icon: ShieldCheck },
+    { to: "/atribuir-permissoes", label: "Atribuir Permissões", icon: KeyRound },
     { to: "/configuracoes", label: "Configurações", icon: Settings },
 ];
 
@@ -101,6 +109,10 @@ function Layout() {
                     {navItens.map((item) => (
                         <SidebarLink key={item.to} {...item} />
                     ))}
+                    <span className="sidebar-section">Equipe</span>
+                    {navEquipe.map((item) => (
+                        <SidebarLink key={item.to} {...item} />
+                    ))}
                 </nav>
             </aside>
             <div className="main-area">
@@ -133,7 +145,7 @@ function Layout() {
                                 <span className="topbar-avatar">{usuario.charAt(0).toUpperCase()}</span>
                                 <span className="topbar-user-text">
                                     <strong>{usuario}</strong>
-                                    <small>Administradora</small>
+                                    <small>{obterPerfilLogado()}</small>
                                 </span>
                             </button>
                             {menuUsuario && (

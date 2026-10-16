@@ -1,9 +1,14 @@
 package br.ueg.trindade.artifact.Web_2_fullstack.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Permissao {
@@ -14,6 +19,14 @@ public class Permissao {
 
     private String nome;
     private String descricao;
+
+    // Lado inverso do relacionamento: quem grava a tabela de junção é Usuario.permissoes.
+    // Fica fora do JSON para não entrar em loop (Usuario -> permissoes -> usuarios -> ...).
+    // O par @JsonManagedReference/@JsonBackReference não serve aqui: o Jackson só aceita
+    // @JsonBackReference em um objeto único, e com Set<Usuario> o cadastro de usuário falha.
+    @ManyToMany(mappedBy = "permissoes")
+    @JsonIgnore
+    private Set<Usuario> usuarios = new HashSet<>();
 
     public Permissao() {
     }
@@ -45,5 +58,13 @@ public class Permissao {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public Set<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(Set<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 }

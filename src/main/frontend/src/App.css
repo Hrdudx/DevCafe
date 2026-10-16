@@ -653,7 +653,7 @@ button.btn-icon {
   margin: 0;
 }
 
-/* ---------- Permissões da equipe ---------- */
+/* ---------- Atribuir Permissões ---------- */
 
 .atribuir-permissoes {
   display: flex;
@@ -715,6 +715,28 @@ button.btn-icon {
   gap: 6px;
   margin-left: 10px;
   vertical-align: middle;
+}
+
+.perfil-tags-bloco {
+  flex-wrap: wrap;
+  margin-left: 0;
+}
+
+.list-item-info a,
+.perfil-tags a {
+  text-decoration: none;
+}
+
+.list-item-info a:hover strong {
+  color: var(--primary);
+}
+
+.nao-encontrada {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 48px 0;
 }
 
 /* ---------- Status ---------- */

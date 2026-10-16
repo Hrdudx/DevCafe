@@ -8,9 +8,11 @@ import {
     Coffee,
     FileText,
     House,
+    KeyRound,
     LogOut,
     Search,
     Settings,
+    ShieldCheck,
     ShoppingCart,
     Star,
     UserRound,
@@ -29,7 +31,13 @@ const navItens = [
     { to: "/clientes", label: "Clientes", icon: UserRound },
     { to: "/relatorios", label: "Relatórios", icon: FileText },
     { to: "/promocoes", label: "Promoções", icon: Star },
+];
+
+// Telas de cadastro da equipe (Aulas 05 a 08), agrupadas no menu.
+const navEquipe = [
     { to: "/usuarios", label: "Usuários", icon: UsersRound },
+    { to: "/permissoes", label: "Permissões", icon: ShieldCheck },
+    { to: "/atribuir-permissoes", label: "Atribuir Permissões", icon: KeyRound },
     { to: "/configuracoes", label: "Configurações", icon: Settings },
 ];
 
@@ -99,6 +107,10 @@ function Layout() {
                 </div>
                 <nav className="sidebar-nav">
                     {navItens.map((item) => (
+                        <SidebarLink key={item.to} {...item} />
+                    ))}
+                    <span className="sidebar-section">Equipe</span>
+                    {navEquipe.map((item) => (
                         <SidebarLink key={item.to} {...item} />
                     ))}
                 </nav>

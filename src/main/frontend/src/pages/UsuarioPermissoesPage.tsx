@@ -99,7 +99,7 @@ function UsuarioPermissoesPage() {
             <fieldset className="permissoes-opcoes" disabled={usuarioId === null}>
                 <legend className="field-label">Permissões</legend>
                 {permissoes.length === 0 && (
-                    <p className="state-message">Nenhuma permissão cadastrada. Cadastre em Configurações → Permissões.</p>
+                    <p className="state-message">Nenhuma permissão cadastrada. Cadastre no menu Permissões.</p>
                 )}
                 {permissoes.map((p) => (
                     <label key={p.id} className="permissao-opcao">

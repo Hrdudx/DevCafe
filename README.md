@@ -4,8 +4,9 @@ Sistema de pedidos para cafeteria, desenvolvido para a **Avaliação N1 de Desen
 Back-end em **Java + Spring Boot** e front-end em **React + TypeScript**, integrados de ponta a ponta
 (React → API REST → banco H2).
 
-- **Projeto-base (Aulas 01 a 07):** CRUD de `Usuario` e `Permissao` em camadas (Controller → Service → Repository)
-  e relacionamento muitos-para-muitos entre eles: cada membro da equipe recebe perfis como `ADMIN`, `ATENDENTE` e `BARISTA`.
+- **Projeto-base (Aulas 01 a 08):** CRUD de `Usuario` e `Permissao` em camadas (Controller → Service → Repository),
+  relacionamento muitos-para-muitos entre eles (cada membro da equipe recebe perfis como `ADMIN`, `ATENDENTE` e `BARISTA`)
+  e navegação com React Router: menu, rotas com parâmetro (`/usuarios/:id`, `/permissoes/:id`) e página 404.
 - **Funcionalidades próprias:** entidades `Produto` (cardápio) e `Pedido` (com `ItemPedido`), com CRUD completo,
   além de login, painel inicial, cardápio, carrinho e acompanhamento de pedidos.
 
@@ -79,42 +80,51 @@ Leva cerca de 10 minutos e cobre todos os itens da checklist.
 ### 2.2 Usuário — menu **Usuários**
 1. Preencha nome, username, e-mail e senha e clique em **Cadastrar**: o usuário aparece na lista.
 2. Clique em **Editar**: o formulário é preenchido com os dados. Altere o nome e clique em **Salvar alterações**: a lista é atualizada.
-3. Clique no nome do usuário logado (canto superior direito) → **Sair** e entre com o usuário recém-criado: o login funciona.
-4. Saia, entre de novo como admin, clique em **Excluir** no usuário de teste e confirme: ele some da lista.
+3. Clique no **nome** de um usuário: abre o detalhe em `/usuarios/{id}` (username, e-mail e perfis). Os botões **Voltar**,
+   **Editar** e **Atribuir permissões** navegam pelo código (`useNavigate`), e o botão voltar do navegador também funciona.
+4. Clique no nome do usuário logado (canto superior direito) → **Sair** e entre com o usuário recém-criado: o login funciona.
+5. Saia, entre de novo como admin, clique em **Excluir** no usuário de teste e confirme: ele some da lista.
 
 > A senha não aparece em nenhuma resposta da API: confira em `http://localhost:8080/api/usuarios`.
 
-### 2.3 Permissão — menu **Configurações** → aba **Permissões**
+### 2.3 Permissão — menu **Permissões** (também em **Configurações** → aba **Permissões**)
 1. **Cadastrar** uma permissão → aparece na lista.
 2. **Editar** → alterar a descrição → **Salvar alterações**.
-3. **Excluir** → some da lista.
-4. Regra de negócio: tente **Excluir** a permissão *ADMIN* → aparece *"Esta permissão está atribuída a usuários e não pode ser excluída"*.
+3. Clique no **nome** de uma permissão: abre o detalhe em `/permissoes/{id}`, com quem da equipe tem esse perfil.
+4. **Excluir** → some da lista.
+5. Regra de negócio: tente **Excluir** a permissão *ADMIN* → aparece *"Esta permissão está atribuída a usuários e não pode ser excluída"*.
 
-### 2.4 Permissões da equipe (Aula 07: muitos-para-muitos) — menu **Usuários** → botão **Permissões**
-1. Cadastre um usuário (ex.: *Ana*) e clique em **Permissões** na linha dele: abre a tela **Permissões da equipe** já com ele selecionado.
+### 2.4 Atribuir permissões (Aula 07: muitos-para-muitos) — menu **Atribuir Permissões**
+1. Cadastre um usuário (ex.: *Ana*) e clique em **Permissões** na linha dele: abre a tela **Atribuir Permissões** já com ele selecionado.
 2. Marque *ATENDENTE* e *BARISTA* e clique em **Salvar permissões**: aparece *"Permissões salvas!"*.
 3. Volte em **Usuários**: os perfis aparecem como etiquetas ao lado do nome.
-4. Escolha outro usuário no seletor: os checkboxes mostram as permissões dele. A mesma tela fica em **Configurações** → aba **Permissões da equipe**.
+4. Escolha outro usuário no seletor: os checkboxes mostram as permissões dele.
 5. Saia e entre como o usuário: o perfil aparece no canto superior direito.
+
+### 2.5 Navegação (Aula 08: React Router)
+1. O menu lateral (`Layout` com `NavLink` + `<Outlet />`) destaca a tela atual. As telas da equipe ficam agrupadas em **Equipe**:
+   Usuários, Permissões, Atribuir Permissões e Configurações.
+2. Abra um endereço que não existe, como `http://localhost:5173/qualquer-coisa`: aparece **Página não encontrada** (rota `*`).
+3. Abra `http://localhost:5173/usuarios/999`: aparece *"Usuário não encontrado."*
 
 > Confira em `http://localhost:8080/api/usuarios/{id}/permissoes`: o usuário vem com a lista `permissoes`,
 > e em `/api/permissoes` as permissões não trazem os usuários de volta (sem recursão infinita).
 
-### 2.5 Produto (entidade própria) — menu **Configurações** → aba **Produtos**
+### 2.6 Produto (entidade própria) — menu **Configurações** → aba **Produtos**
 1. **Cadastrar** um produto com nome, descrição, preço e categoria → aparece na lista e também no menu **Cardápio**.
 2. **Editar** o preço → a lista mostra o novo valor.
 3. **Excluir** o produto de teste → some da lista.
 4. Regra de negócio: tente **Excluir** o *Cappuccino* → aparece *"Este produto já aparece em pedidos e não pode ser excluído"*.
 5. Regra de negócio: tente cadastrar um produto com preço `0` → o cadastro é recusado.
 
-### 2.6 Pedido (entidade própria) — menus **Fazer Pedido** e **Meus Pedidos**
+### 2.7 Pedido (entidade própria) — menus **Fazer Pedido** e **Meus Pedidos**
 1. Em **Fazer Pedido**, clique no **+** de alguns produtos: o carrinho à direita mostra itens, quantidades e total.
 2. Clique em **Finalizar Pedido**: abre o detalhe do pedido criado.
 3. No selo de status ao lado do título, escolha outro status (ex.: *Em preparo*): o pedido é atualizado.
 4. Em **Meus Pedidos**, o pedido aparece na lista (teste as abas, o filtro de datas e a busca por número ou cliente).
 5. Clique na **lixeira** do pedido de teste e confirme: ele some da lista.
 
-### 2.7 Banco de dados (opcional)
+### 2.8 Banco de dados (opcional)
 Abra `http://localhost:8080/h2-console`, use a JDBC URL `jdbc:h2:file:./database.db`, usuário `sa` e senha em branco.
 As tabelas `USUARIO`, `PERMISSAO`, `USUARIO_PERMISSAO` (tabela de junção do muitos-para-muitos), `PRODUTO`, `PEDIDO` e `ITEM_PEDIDO`
 mostram os dados gravados pelas telas.
@@ -168,6 +178,13 @@ mostram os dados gravados pelas telas.
 | `components/` com listagem, item (via props) e formulário controlado (`useState` + `useEffect`) | `UsuarioLista` / `UsuarioItem` / `UsuarioForm`, `PermissaoLista` / `PermissaoItem` / `PermissaoForm`, `ProdutoLista` / `ProdutoItem` / `ProdutoForm` |
 | `pages/` com a lógica de cada tela | `UsuariosPage`, `PermissoesPage`, `ProdutosPage` (entidade própria), `PedidosPage`, entre outras |
 | `App.tsx` apenas renderizando as páginas | `App.tsx` (só declara as rotas) |
+| React Router: `BrowserRouter` (Aula 08) | `main.tsx` |
+| Menu com `NavLink` e `<Outlet />` | `components/Layout.tsx` |
+| Rotas aninhadas no `Layout`, com `/usuarios`, `/usuarios/:id`, `/atribuir-permissoes`, `/permissoes`, `/permissoes/:id` e `*` (404) | `App.tsx` |
+| Detalhe com `useParams` e `useNavigate` | `pages/UsuarioDetailPage.tsx`, `pages/PermissaoDetailPage.tsx` |
+| `Link` para o detalhe na listagem | `components/UsuarioItem.tsx`, `components/PermissaoItem.tsx` |
+| `useNavigate` no `UsuarioForm` para ir a `/usuarios` após salvar | `components/UsuarioForm.tsx` |
+| Página 404 | `pages/NaoEncontradaPage.tsx` |
 | Botões **Editar** e **Excluir**, recarregando a lista | componentes `*Item.tsx` + função `carregar...()` nas páginas |
 | CRUD completo no navegador para `Usuario`, `Permissao` e entidade própria | ver seção 2 |
 | Tela de atribuição de permissões (select de usuários + checkboxes) | `pages/UsuarioPermissoesPage.tsx`, com `permissoes?` em `types/Usuario.ts` |
@@ -207,7 +224,10 @@ O console do banco H2 fica em `http://localhost:8080/h2-console`
 | Cardápio | Produtos por categoria, busca, ordenação e favoritos |
 | Clientes / Relatórios | Informações geradas a partir dos pedidos |
 | Usuários / Configurações | Cadastros de usuários, produtos e permissões |
-| Permissões da equipe | Escolha de um usuário e marcação dos perfis dele (ADMIN, ATENDENTE, BARISTA…) |
+| Detalhe do usuário | Username, e-mail e perfis de acesso, com atalhos para editar e atribuir permissões |
+| Atribuir Permissões | Escolha de um usuário e marcação dos perfis dele (ADMIN, ATENDENTE, BARISTA…) |
+| Detalhe da permissão | Descrição do perfil e quem da equipe o possui |
+| Página não encontrada | Qualquer endereço inexistente (rota `*`) |
 
 ## 6. Estrutura do projeto
 

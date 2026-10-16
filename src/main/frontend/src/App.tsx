@@ -16,6 +16,9 @@ import ConfiguracoesPage from "./pages/ConfiguracoesPage";
 import UsuariosPage from "./pages/UsuariosPage";
 import PermissoesPage from "./pages/PermissoesPage";
 import UsuarioPermissoesPage from "./pages/UsuarioPermissoesPage";
+import UsuarioDetailPage from "./pages/UsuarioDetailPage";
+import PermissaoDetailPage from "./pages/PermissaoDetailPage";
+import NaoEncontradaPage from "./pages/NaoEncontradaPage";
 import ProdutosPage from "./pages/ProdutosPage";
 
 function App() {
@@ -41,11 +44,12 @@ function App() {
                             </PaginaCadastro>
                         }
                     />
+                    <Route path="usuarios/:id" element={<UsuarioDetailPage />} />
                     <Route
-                        path="usuarios/permissoes"
+                        path="atribuir-permissoes"
                         element={
                             <PaginaCadastro
-                                titulo="Permissões da equipe"
+                                titulo="Atribuir Permissões"
                                 subtitulo="Escolha um usuário e marque os perfis de acesso dele."
                             >
                                 <UsuarioPermissoesPage />
@@ -60,6 +64,7 @@ function App() {
                             </PaginaCadastro>
                         }
                     />
+                    <Route path="permissoes/:id" element={<PermissaoDetailPage />} />
                     <Route
                         path="produtos"
                         element={
@@ -68,6 +73,7 @@ function App() {
                             </PaginaCadastro>
                         }
                     />
+                    <Route path="*" element={<NaoEncontradaPage />} />
                 </Route>
             </Routes>
         </CarrinhoProvider>

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { Usuario } from "../types/Usuario";
 
 interface UsuarioItemProps {
@@ -11,7 +12,7 @@ function UsuarioItem({ usuario, onEditar, onExcluir, onPermissoes }: UsuarioItem
     return (
         <li className="list-item">
             <span className="list-item-info">
-                <strong>{usuario.nome}</strong> ({usuario.username}) — {usuario.email}
+                <Link to={`/usuarios/${usuario.id}`}><strong>{usuario.nome}</strong></Link> ({usuario.username}) — {usuario.email}
                 {usuario.permissoes && usuario.permissoes.length > 0 && (
                     <span className="perfil-tags">
                         {usuario.permissoes.map((p) => (

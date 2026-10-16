@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../services/api";
 import type { Usuario } from "../types/Usuario";
 import UsuarioForm from "../components/UsuarioForm";
@@ -8,6 +8,7 @@ import UsuarioLista from "../components/UsuarioLista";
 
 function UsuariosPage() {
     const navigate = useNavigate();
+    const [params] = useSearchParams();
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
@@ -31,6 +32,12 @@ function UsuariosPage() {
     useEffect(() => {
         carregarUsuarios();
     }, []);
+
+    // Vindo do detalhe (botão "Editar"), /usuarios?editar=2 já abre o formulário preenchido.
+    useEffect(() => {
+        const id = Number(params.get("editar"));
+        if (id) setEditando(usuarios.find((u) => u.id === id) ?? null);
+    }, [params, usuarios]);
 
     async function excluir(id: number) {
         if (!window.confirm("Tem certeza que deseja excluir?")) return;
@@ -58,7 +65,10 @@ function UsuariosPage() {
             <UsuarioForm
                 usuarioEditando={editando}
                 usuariosExistentes={usuarios}
-                onCancelar={() => setEditando(null)}
+                onCancelar={() => {
+                    setEditando(null);
+                    navigate("/usuarios");
+                }}
                 onUsuarioSalvo={() => {
                     carregarUsuarios();
                     setEditando(null);
@@ -71,7 +81,7 @@ function UsuariosPage() {
                 usuarios={usuarios}
                 onEditar={setEditando}
                 onExcluir={excluir}
-                onPermissoes={(id) => navigate(`/usuarios/permissoes?usuario=${id}`)}
+                onPermissoes={(id) => navigate(`/atribuir-permissoes?usuario=${id}`)}
             />
         </>
     );

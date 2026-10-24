@@ -1,3 +1,4 @@
+import Botao from "./Botao";
 import type { Produto } from "../types/Produto";
 import { formatarMoeda } from "../utils/formatar";
 
@@ -14,8 +15,8 @@ function ProdutoItem({ produto, onEditar, onExcluir }: ProdutoItemProps) {
                 <strong>{produto.nome}</strong> — {produto.descricao} ({formatarMoeda(produto.preco)})
             </span>
             <span className="list-item-actions">
-                {onEditar && <button className="btn btn-edit" onClick={onEditar}>Editar</button>}
-                {onExcluir && <button className="btn btn-delete" onClick={onExcluir}>Excluir</button>}
+                {onEditar && <Botao variante="neutro" tamanho="sm" onClick={onEditar}>Editar</Botao>}
+                {onExcluir && <Botao variante="perigo" tamanho="sm" onClick={onExcluir}>Excluir</Botao>}
             </span>
         </li>
     );

@@ -1,3 +1,25 @@
+/*
+ * Aula 08.5 — Tailwind CSS.
+ * O slide troca este arquivo inteiro por @import "tailwindcss";. Aqui importamos só
+ * o tema e as classes utilitárias, sem o "preflight" (o reset de estilos do Tailwind),
+ * para não desmontar o visual que o DevCafé já tinha em App.css. As classes do
+ * Tailwind (bg-..., px-4, flex, md:grid-cols-2...) funcionam normalmente.
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* Cores da marca DevCafé disponíveis como classes: bg-primary, text-primary, hover:bg-primary-hover... */
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-texto: var(--text);
+  --color-texto-suave: var(--text-muted);
+  --color-borda: var(--border);
+  --color-borda-forte: var(--border-strong);
+}
+
 :root {
   --bg: #f4f7fc;
   --surface: #ffffff;

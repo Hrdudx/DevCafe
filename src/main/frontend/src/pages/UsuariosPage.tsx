@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import api from "../services/api";
 import type { Usuario } from "../types/Usuario";
@@ -11,6 +12,8 @@ function UsuariosPage() {
     const [erro, setErro] = useState<string | null>(null);
     const [erroExclusao, setErroExclusao] = useState<string | null>(null);
     const [editando, setEditando] = useState<Usuario | null>(null);
+    const [parametros, setParametros] = useSearchParams();
+    const idParaEditar = Number(parametros.get("editar"));
 
     function carregarUsuarios() {
         api.get<Usuario[]>("/usuarios")
@@ -29,6 +32,16 @@ function UsuariosPage() {
     useEffect(() => {
         carregarUsuarios();
     }, []);
+
+    // O botão "Editar" da tela de detalhe chega aqui como /usuarios?editar=id.
+    // Assim que a lista carrega, abre o formulário com esse usuário e limpa o parâmetro.
+    useEffect(() => {
+        const usuario = usuarios.find((u) => u.id === idParaEditar);
+        if (usuario) {
+            setEditando(usuario);
+            setParametros({}, { replace: true });
+        }
+    }, [idParaEditar, usuarios, setParametros]);
 
     async function excluir(id: number) {
         if (!window.confirm("Tem certeza que deseja excluir?")) return;

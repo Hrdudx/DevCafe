@@ -1,9 +1,14 @@
 package br.ueg.trindade.artifact.Web_2_fullstack.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Permissao {
@@ -14,6 +19,15 @@ public class Permissao {
 
     private String nome;
     private String descricao;
+
+    // Lado inverso do relacionamento (quem manda é Usuario.permissoes).
+    // @JsonIgnore tira este lado do JSON e evita a recursão infinita
+    // (Usuario -> permissoes -> usuarios -> Usuario -> ...).
+    // O slide usa @JsonManagedReference/@JsonBackReference, mas o Jackson não aceita
+    // @JsonBackReference em coleção ao ler JSON: o POST/PUT de usuário dava erro 500.
+    @ManyToMany(mappedBy = "permissoes")
+    @JsonIgnore
+    private Set<Usuario> usuarios = new HashSet<>();
 
     public Permissao() {
     }
@@ -45,5 +59,13 @@ public class Permissao {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public Set<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(Set<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 }

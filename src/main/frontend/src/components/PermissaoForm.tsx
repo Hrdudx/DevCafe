@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import api from "../services/api";
+import Botao from "./Botao";
 import type { Permissao } from "../types/Permissao";
 
 interface PermissaoFormProps {
@@ -62,13 +63,13 @@ function PermissaoForm({ onPermissaoSalva, onCancelar, permissaoEditando }: Perm
             />
             {erro && <p className="form-error">{erro}</p>}
             <div className="form-actions">
-                <button className="btn btn-primary" type="submit">
+                <Botao type="submit">
                     {permissaoEditando ? "Salvar alterações" : "Cadastrar"}
-                </button>
+                </Botao>
                 {permissaoEditando && (
-                    <button className="btn btn-outline" type="button" onClick={onCancelar}>
+                    <Botao variante="contorno" onClick={onCancelar}>
                         Cancelar
-                    </button>
+                    </Botao>
                 )}
             </div>
         </form>

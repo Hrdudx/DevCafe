@@ -6,6 +6,7 @@ import br.ueg.trindade.artifact.Web_2_fullstack.repository.PermissaoRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,9 +43,13 @@ public class PermissaoService {
         return permissaoRepository.save(permissao);
     }
 
+    // Antes de excluir, tira a permissão dos usuários que a possuem; senão o banco
+    // recusa a exclusão por causa das linhas na tabela de junção usuario_permissao.
+    @Transactional
     public void excluir(Long id) {
-        buscarPorId(id);
-        permissaoRepository.deleteById(id);
+        Permissao permissao = buscarPorId(id);
+        permissao.getUsuarios().forEach(usuario -> usuario.getPermissoes().remove(permissao));
+        permissaoRepository.delete(permissao);
     }
 
     private void validarNome(Permissao permissao) {

@@ -1,23 +1,31 @@
 package br.ueg.trindade.artifact.Web_2_fullstack.service;
 
+import br.ueg.trindade.artifact.Web_2_fullstack.model.Permissao;
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Usuario;
+import br.ueg.trindade.artifact.Web_2_fullstack.repository.PermissaoRepository;
 import br.ueg.trindade.artifact.Web_2_fullstack.repository.UsuarioRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PermissaoRepository permissaoRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PermissaoRepository permissaoRepository,
+                          PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.permissaoRepository = permissaoRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -51,6 +59,22 @@ public class UsuarioService {
             usuario.setSenha(passwordEncoder.encode(usuarioAtualizado.getSenha()));
         }
 
+        return usuarioRepository.save(usuario);
+    }
+
+    // Substitui as permissões do usuário pela lista de ids recebida (ex.: [1, 2]).
+    // O save() grava a nova seleção na tabela de junção usuario_permissao.
+    @Transactional
+    public Usuario atribuirPermissoes(Long usuarioId, List<Long> idsPermissoes) {
+        Usuario usuario = buscarPorId(usuarioId);
+        Set<Long> idsUnicos = new HashSet<>(idsPermissoes);
+        Set<Permissao> permissoes = new HashSet<>(permissaoRepository.findAllById(idsUnicos));
+
+        if (permissoes.size() != idsUnicos.size()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Uma ou mais permissões não existem");
+        }
+
+        usuario.setPermissoes(permissoes);
         return usuarioRepository.save(usuario);
     }
 

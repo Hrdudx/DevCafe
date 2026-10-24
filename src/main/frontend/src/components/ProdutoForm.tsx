@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import api from "../services/api";
+import Botao from "./Botao";
 import type { Produto } from "../types/Produto";
 
 const CATEGORIAS = ["Cafés", "Bebidas Geladas", "Lanches", "Doces", "Salgados"];
@@ -96,13 +97,13 @@ function ProdutoForm({ onProdutoSalvo, onCancelar, produtoEditando }: ProdutoFor
             />
             {erro && <p className="form-error">{erro}</p>}
             <div className="form-actions">
-                <button className="btn btn-primary" type="submit">
+                <Botao type="submit">
                     {produtoEditando ? "Salvar alterações" : "Cadastrar"}
-                </button>
+                </Botao>
                 {produtoEditando && (
-                    <button className="btn btn-outline" type="button" onClick={onCancelar}>
+                    <Botao variante="contorno" onClick={onCancelar}>
                         Cancelar
-                    </button>
+                    </Botao>
                 )}
             </div>
         </form>

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from "../services/api";
+import Botao from "./Botao";
 import type { Usuario } from "../types/Usuario";
 
 interface UsuarioFormProps {
@@ -17,6 +19,7 @@ function UsuarioForm({ onUsuarioSalvo, onCancelar, usuarioEditando, usuariosExis
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [erro, setErro] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     // Quando o usuário clica em "Editar", preenche o formulário com os dados do item.
     // A senha nunca vem do back-end, então começa sempre em branco.
@@ -67,6 +70,8 @@ function UsuarioForm({ onUsuarioSalvo, onCancelar, usuarioEditando, usuariosExis
             }
             setErro(null);
             onUsuarioSalvo();
+            // Volta para a lista (e limpa o ?editar=id quando a edição veio da tela de detalhe).
+            navigate("/usuarios");
         } catch (e) {
             const mensagem = axios.isAxiosError(e) ? e.response?.data?.message : null;
             setErro(mensagem || "Não foi possível salvar o usuário. Verifique os dados e tente novamente.");
@@ -104,13 +109,13 @@ function UsuarioForm({ onUsuarioSalvo, onCancelar, usuarioEditando, usuariosExis
             />
             {erro && <p className="form-error">{erro}</p>}
             <div className="form-actions">
-                <button className="btn btn-primary" type="submit">
+                <Botao type="submit">
                     {usuarioEditando ? "Salvar alterações" : "Cadastrar"}
-                </button>
+                </Botao>
                 {usuarioEditando && (
-                    <button className="btn btn-outline" type="button" onClick={onCancelar}>
+                    <Botao variante="contorno" onClick={onCancelar}>
                         Cancelar
-                    </button>
+                    </Botao>
                 )}
             </div>
         </form>

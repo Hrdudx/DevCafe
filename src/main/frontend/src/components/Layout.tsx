@@ -8,9 +8,11 @@ import {
     Coffee,
     FileText,
     House,
+    KeyRound,
     LogOut,
     Search,
     Settings,
+    ShieldCheck,
     ShoppingCart,
     Star,
     UserRound,
@@ -30,6 +32,8 @@ const navItens = [
     { to: "/relatorios", label: "Relatórios", icon: FileText },
     { to: "/promocoes", label: "Promoções", icon: Star },
     { to: "/usuarios", label: "Usuários", icon: UsersRound },
+    { to: "/permissoes", label: "Permissões", icon: ShieldCheck },
+    { to: "/atribuir-permissoes", label: "Atribuir Permissões", icon: KeyRound },
     { to: "/configuracoes", label: "Configurações", icon: Settings },
 ];
 

@@ -148,3 +148,17 @@ INSERT INTO item_pedido (pedido_id, produto_id, quantidade, preco_unitario)
 SELECT pe.id, pr.id, 1, pr.preco FROM pedido pe, produto pr
 WHERE pe.id = (SELECT MIN(id) FROM pedido WHERE cliente = 'Ana Souza') AND pr.nome = 'Brownie'
 AND NOT EXISTS (SELECT 1 FROM item_pedido i WHERE i.pedido_id = pe.id AND i.produto_id = pr.id);
+
+-- Perfis de acesso de exemplo, para a tela "Atribuir Permissões" não começar vazia.
+
+INSERT INTO permissao (nome, descricao)
+SELECT 'ADMIN', 'Acesso total ao sistema'
+WHERE NOT EXISTS (SELECT 1 FROM permissao WHERE nome = 'ADMIN');
+
+INSERT INTO permissao (nome, descricao)
+SELECT 'ATENDENTE', 'Registra e acompanha pedidos'
+WHERE NOT EXISTS (SELECT 1 FROM permissao WHERE nome = 'ATENDENTE');
+
+INSERT INTO permissao (nome, descricao)
+SELECT 'COZINHA', 'Prepara os pedidos e atualiza o status'
+WHERE NOT EXISTS (SELECT 1 FROM permissao WHERE nome = 'COZINHA');

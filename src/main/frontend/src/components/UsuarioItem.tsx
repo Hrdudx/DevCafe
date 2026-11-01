@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import type { Usuario } from "../types/Usuario";
+import Botao from "./Botao";
 
 interface UsuarioItemProps {
     usuario: Usuario;
@@ -8,13 +10,16 @@ interface UsuarioItemProps {
 
 function UsuarioItem({ usuario, onEditar, onExcluir }: UsuarioItemProps) {
     return (
-        <li className="list-item">
-            <span className="list-item-info">
-                <strong>{usuario.nome}</strong> ({usuario.username}) — {usuario.email}
+        <li className="flex flex-wrap items-center justify-between gap-2 p-4">
+            <span>
+                <Link to={`/usuarios/${usuario.id}`} className="font-medium text-blue-600 no-underline hover:underline">
+                    {usuario.nome}
+                </Link>{" "}
+                <span className="text-gray-500">({usuario.username}) — {usuario.email}</span>
             </span>
-            <span className="list-item-actions">
-                {onEditar && <button className="btn btn-edit" onClick={onEditar}>Editar</button>}
-                {onExcluir && <button className="btn btn-delete" onClick={onExcluir}>Excluir</button>}
+            <span className="flex gap-2">
+                {onEditar && <Botao variante="neutro" onClick={onEditar}>Editar</Botao>}
+                {onExcluir && <Botao variante="perigo" onClick={onExcluir}>Excluir</Botao>}
             </span>
         </li>
     );

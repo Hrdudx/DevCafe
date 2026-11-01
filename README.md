@@ -5,6 +5,9 @@ Back-end em **Java + Spring Boot** e front-end em **React + TypeScript**, integr
 (React → API REST → banco H2).
 
 - **Projeto-base (Aulas 01 a 06):** CRUD de `Usuario` e `Permissao` em camadas (Controller → Service → Repository).
+- **Aula 07:** relacionamento muitos-para-muitos `Usuario` ↔ `Permissao` (`@ManyToMany`) e tela **Atribuir Permissões**.
+- **Aula 08:** React Router — menu (`Layout` + `Outlet`), rotas com parâmetro (`/usuarios/:id`, `/permissoes/:id`, `/pedidos/:id`) e página 404.
+- **Aula 08.5:** Tailwind CSS — componente `Botao` e telas de usuários, permissões e detalhes estilizadas com classes utilitárias.
 - **Funcionalidades próprias:** entidades `Produto` (cardápio) e `Pedido` (com `ItemPedido`), com CRUD completo,
   além de login, painel inicial, cardápio, carrinho e acompanhamento de pedidos.
 
@@ -83,28 +86,38 @@ Leva cerca de 10 minutos e cobre todos os itens da checklist.
 
 > A senha não aparece em nenhuma resposta da API: confira em `http://localhost:8080/api/usuarios`.
 
-### 2.3 Permissão — menu **Configurações** → aba **Permissões**
+### 2.3 Detalhe do usuário e Atribuir Permissões (Aulas 07 e 08)
+1. Em **Usuários**, clique no **nome** de um usuário: abre o detalhe em `/usuarios/{id}` com as permissões dele.
+2. Clique em **Editar permissões** (ou no menu **Atribuir Permissões**): escolha o usuário, marque **ADMIN** e **COZINHA** e clique em **Salvar permissões** → aparece o aviso verde *"Permissões salvas!"*.
+3. Volte ao detalhe do usuário: as permissões marcadas aparecem como selos.
+4. Use o botão **voltar do navegador**: a navegação funciona sem recarregar a página.
+5. Acesse um endereço que não existe (ex.: `http://localhost:5173/xyz`): aparece *"Página não encontrada"*.
+
+> No H2 Console, a tabela `USUARIO_PERMISSAO` guarda os pares usuário/permissão.
+
+### 2.4 Permissão — menu **Configurações** → aba **Permissões**
 1. **Cadastrar** uma permissão → aparece na lista.
 2. **Editar** → alterar a descrição → **Salvar alterações**.
-3. **Excluir** → some da lista.
+3. Clique no **nome** da permissão: abre o detalhe em `/permissoes/{id}`.
+4. **Excluir** → some da lista (mesmo que esteja atribuída a algum usuário: o vínculo é removido antes).
 
-### 2.4 Produto (entidade própria) — menu **Configurações** → aba **Produtos**
+### 2.5 Produto (entidade própria) — menu **Configurações** → aba **Produtos**
 1. **Cadastrar** um produto com nome, descrição, preço e categoria → aparece na lista e também no menu **Cardápio**.
 2. **Editar** o preço → a lista mostra o novo valor.
 3. **Excluir** o produto de teste → some da lista.
 4. Regra de negócio: tente **Excluir** o *Cappuccino* → aparece *"Este produto já aparece em pedidos e não pode ser excluído"*.
 5. Regra de negócio: tente cadastrar um produto com preço `0` → o cadastro é recusado.
 
-### 2.5 Pedido (entidade própria) — menus **Fazer Pedido** e **Meus Pedidos**
+### 2.6 Pedido (entidade própria) — menus **Fazer Pedido** e **Meus Pedidos**
 1. Em **Fazer Pedido**, clique no **+** de alguns produtos: o carrinho à direita mostra itens, quantidades e total.
 2. Clique em **Finalizar Pedido**: abre o detalhe do pedido criado.
 3. No selo de status ao lado do título, escolha outro status (ex.: *Em preparo*): o pedido é atualizado.
 4. Em **Meus Pedidos**, o pedido aparece na lista (teste as abas, o filtro de datas e a busca por número ou cliente).
 5. Clique na **lixeira** do pedido de teste e confirme: ele some da lista.
 
-### 2.6 Banco de dados (opcional)
+### 2.7 Banco de dados (opcional)
 Abra `http://localhost:8080/h2-console`, use a JDBC URL `jdbc:h2:file:./database.db`, usuário `sa` e senha em branco.
-As tabelas `USUARIO`, `PERMISSAO`, `PRODUTO`, `PEDIDO` e `ITEM_PEDIDO` mostram os dados gravados pelas telas.
+As tabelas `USUARIO`, `PERMISSAO`, `USUARIO_PERMISSAO`, `PRODUTO`, `PEDIDO` e `ITEM_PEDIDO` mostram os dados gravados pelas telas.
 
 ## 3. Checklist da Avaliação N1
 
@@ -161,6 +174,9 @@ Base: `http://localhost:8080/api`
 | Produtos | `/produtos` | `/produtos/{id}` | `/produtos` | `/produtos/{id}` | `/produtos/{id}` |
 | Pedidos | `/pedidos` | `/pedidos/{id}` | `/pedidos` | `/pedidos/{id}/status` | `/pedidos/{id}` |
 
+Permissões do usuário (Aula 07): `GET /usuarios/{id}/permissoes` e `PUT /usuarios/{id}/permissoes`
+com a lista de ids no corpo (ex.: `[1, 2]`).
+
 Login: `POST /api/auth/login` com `{ "email": "...", "senha": "..." }`.
 
 Erros voltam com o código HTTP adequado e uma mensagem (`404` não encontrado, `400` dado inválido,
@@ -181,6 +197,8 @@ O console do banco H2 fica em `http://localhost:8080/h2-console`
 | Cardápio | Produtos por categoria, busca, ordenação e favoritos |
 | Clientes / Relatórios | Informações geradas a partir dos pedidos |
 | Usuários / Configurações | Cadastros de usuários, produtos e permissões |
+| Detalhe do usuário / da permissão | Dados do registro, aberto pelo nome na lista (`/usuarios/:id`, `/permissoes/:id`) |
+| Atribuir Permissões | Seleção de usuário e checkboxes com os perfis de acesso (muitos-para-muitos) |
 
 ## 6. Estrutura do projeto
 
@@ -209,7 +227,9 @@ DevCafe/
 
 **Back-end:** Java 21, Spring Boot 4, Spring Web, Spring Data JPA, Spring Security (BCrypt), H2, PostgreSQL (driver), DevTools.
 
-**Front-end:** React 19, TypeScript, Vite, Axios, React Router, lucide-react (ícones).
+**Front-end:** React 19, TypeScript, Vite, Axios, React Router, Tailwind CSS, lucide-react (ícones).
+
+> O Tailwind é importado sem o *preflight* (reset de estilos), para conviver com o `App.css` das telas que já existiam.
 
 ## 8. Próximos passos
 

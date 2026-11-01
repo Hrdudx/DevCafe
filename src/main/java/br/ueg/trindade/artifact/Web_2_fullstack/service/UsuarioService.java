@@ -1,23 +1,31 @@
 package br.ueg.trindade.artifact.Web_2_fullstack.service;
 
+import br.ueg.trindade.artifact.Web_2_fullstack.model.Permissao;
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Usuario;
+import br.ueg.trindade.artifact.Web_2_fullstack.repository.PermissaoRepository;
 import br.ueg.trindade.artifact.Web_2_fullstack.repository.UsuarioRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PermissaoRepository permissaoRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PermissaoRepository permissaoRepository,
+                          PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.permissaoRepository = permissaoRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -64,6 +72,19 @@ public class UsuarioService {
     public void excluir(Long id) {
         buscarPorId(id);
         usuarioRepository.deleteById(id);
+    }
+
+    // Substitui as permissões do usuário pelas da lista enviada (ex.: [1, 2]);
+    // o save() grava as alterações na tabela de junção usuario_permissao.
+    @Transactional
+    public Usuario atribuirPermissoes(Long usuarioId, List<Long> idsPermissoes) {
+        Usuario usuario = buscarPorId(usuarioId);
+        Set<Permissao> permissoes = new HashSet<>(permissaoRepository.findAllById(idsPermissoes));
+        if (permissoes.size() != new HashSet<>(idsPermissoes).size()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Permissão não encontrada");
+        }
+        usuario.setPermissoes(permissoes);
+        return usuarioRepository.save(usuario);
     }
 
     private void validarEmailUnico(String email, Long idAtual) {

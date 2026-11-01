@@ -1,3 +1,9 @@
+/* Tailwind CSS (Aula 08.5). Importamos só o tema e as classes utilitárias, sem o
+   "preflight" (reset do Tailwind), para não mudar o visual das telas que usam o App.css. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
 :root {
   --bg: #f4f7fc;
   --surface: #ffffff;

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from "../services/api";
 import type { Usuario } from "../types/Usuario";
+import Botao from "./Botao";
 
 interface UsuarioFormProps {
     onUsuarioSalvo: () => void;
@@ -11,7 +13,11 @@ interface UsuarioFormProps {
     usuariosExistentes: Usuario[];
 }
 
+const campo =
+    "rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none";
+
 function UsuarioForm({ onUsuarioSalvo, onCancelar, usuarioEditando, usuariosExistentes }: UsuarioFormProps) {
+    const navigate = useNavigate();
     const [nome, setNome] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -67,6 +73,7 @@ function UsuarioForm({ onUsuarioSalvo, onCancelar, usuarioEditando, usuariosExis
             }
             setErro(null);
             onUsuarioSalvo();
+            navigate("/usuarios");
         } catch (e) {
             const mensagem = axios.isAxiosError(e) ? e.response?.data?.message : null;
             setErro(mensagem || "Não foi possível salvar o usuário. Verifique os dados e tente novamente.");
@@ -74,43 +81,26 @@ function UsuarioForm({ onUsuarioSalvo, onCancelar, usuarioEditando, usuariosExis
     }
 
     return (
-        <form className="form" onSubmit={handleSubmit}>
-            <input
-                className="input"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                placeholder="Nome"
-            />
-            <input
-                className="input"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-            />
-            <input
-                className="input"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="E-mail"
-            />
-            <input
-                className="input"
-                type="password"
-                value={senha}
+        <form onSubmit={handleSubmit} className="mb-6 grid gap-3 md:grid-cols-4">
+            <input className={campo} value={nome}
+                onChange={(e) => setNome(e.target.value)} placeholder="Nome" />
+            <input className={campo} value={username}
+                onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+            <input className={campo} type="email" value={email}
+                onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" />
+            <input className={campo} type="password" value={senha}
                 onChange={(e) => setSenha(e.target.value)}
                 placeholder={usuarioEditando ? "Nova senha (opcional)" : "Senha"}
-                autoComplete="new-password"
-            />
-            {erro && <p className="form-error">{erro}</p>}
-            <div className="form-actions">
-                <button className="btn btn-primary" type="submit">
+                autoComplete="new-password" />
+            {erro && <p className="m-0 text-sm text-red-600 md:col-span-4">{erro}</p>}
+            <div className="flex gap-2 md:col-span-4">
+                <Botao type="submit">
                     {usuarioEditando ? "Salvar alterações" : "Cadastrar"}
-                </button>
+                </Botao>
                 {usuarioEditando && (
-                    <button className="btn btn-outline" type="button" onClick={onCancelar}>
+                    <Botao variante="neutro" type="button" onClick={onCancelar}>
                         Cancelar
-                    </button>
+                    </Botao>
                 )}
             </div>
         </form>

@@ -9,11 +9,11 @@ interface UsuarioListaProps {
 
 function UsuarioLista({ usuarios, onEditar, onExcluir }: UsuarioListaProps) {
     if (usuarios.length === 0) {
-        return <p className="state-message">Nenhum cadastro ainda.</p>;
+        return <p className="text-gray-500">Nenhum cadastro ainda.</p>;
     }
 
     return (
-        <ul className="list">
+        <ul className="m-0 list-none divide-y divide-gray-200 rounded-lg border border-gray-200 p-0">
             {usuarios.map((usuario) => (
                 <UsuarioItem
                     key={usuario.id}

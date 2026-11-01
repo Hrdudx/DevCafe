@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { Permissao } from "../types/Permissao";
 
 interface PermissaoItemProps {
@@ -10,7 +11,7 @@ function PermissaoItem({ permissao, onEditar, onExcluir }: PermissaoItemProps) {
     return (
         <li className="list-item">
             <span className="list-item-info">
-                <strong>{permissao.nome}</strong> — {permissao.descricao}
+                <Link to={`/permissoes/${permissao.id}`}><strong>{permissao.nome}</strong></Link> — {permissao.descricao}
             </span>
             <span className="list-item-actions">
                 {onEditar && <button className="btn btn-edit" onClick={onEditar}>Editar</button>}

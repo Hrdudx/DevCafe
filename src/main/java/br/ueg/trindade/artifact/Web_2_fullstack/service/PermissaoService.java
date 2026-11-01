@@ -1,11 +1,13 @@
 package br.ueg.trindade.artifact.Web_2_fullstack.service;
 
 import br.ueg.trindade.artifact.Web_2_fullstack.model.Permissao;
+import br.ueg.trindade.artifact.Web_2_fullstack.model.Usuario;
 import br.ueg.trindade.artifact.Web_2_fullstack.repository.PermissaoRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,9 +44,17 @@ public class PermissaoService {
         return permissaoRepository.save(permissao);
     }
 
+    @Transactional
     public void excluir(Long id) {
-        buscarPorId(id);
-        permissaoRepository.deleteById(id);
+        Permissao permissao = buscarPorId(id);
+
+        // Usuario é o dono do relacionamento: tira a permissão dos usuários
+        // antes de excluí-la, para não violar a chave estrangeira em usuario_permissao.
+        for (Usuario usuario : permissao.getUsuarios()) {
+            usuario.getPermissoes().remove(permissao);
+        }
+
+        permissaoRepository.delete(permissao);
     }
 
     private void validarNome(Permissao permissao) {

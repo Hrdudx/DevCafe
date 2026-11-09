@@ -162,3 +162,40 @@ WHERE NOT EXISTS (SELECT 1 FROM permissao WHERE nome = 'ATENDENTE');
 INSERT INTO permissao (nome, descricao)
 SELECT 'COZINHA', 'Prepara os pedidos e atualiza o status'
 WHERE NOT EXISTS (SELECT 1 FROM permissao WHERE nome = 'COZINHA');
+
+-- N2: clientes e avaliações de exemplo (1 cliente → N avaliações).
+INSERT INTO cliente (nome, email, telefone, data_cadastro)
+SELECT 'Felipe Almeida', 'felipe@exemplo.com', '(62) 99134-5521', DATEADD('DAY', -30, CURRENT_DATE)
+WHERE NOT EXISTS (SELECT 1 FROM cliente WHERE email = 'felipe@exemplo.com');
+
+INSERT INTO cliente (nome, email, telefone, data_cadastro)
+SELECT 'Rafael Costa', 'rafael@exemplo.com', '(62) 98422-1037', DATEADD('DAY', -21, CURRENT_DATE)
+WHERE NOT EXISTS (SELECT 1 FROM cliente WHERE email = 'rafael@exemplo.com');
+
+INSERT INTO cliente (nome, email, telefone, data_cadastro)
+SELECT 'Beatriz Rocha', 'beatriz@exemplo.com', '(62) 99610-4482', DATEADD('DAY', -10, CURRENT_DATE)
+WHERE NOT EXISTS (SELECT 1 FROM cliente WHERE email = 'beatriz@exemplo.com');
+
+INSERT INTO avaliacao (nota, comentario, data_hora, cliente_id, produto_id)
+SELECT 5, 'Melhor cappuccino da cidade, cremoso na medida.', DATEADD('HOUR', -26, LOCALTIMESTAMP),
+       (SELECT id FROM cliente WHERE email = 'felipe@exemplo.com'), (SELECT id FROM produto WHERE nome = 'Cappuccino')
+WHERE NOT EXISTS (SELECT 1 FROM avaliacao a JOIN cliente c ON c.id = a.cliente_id JOIN produto p ON p.id = a.produto_id
+                  WHERE c.email = 'felipe@exemplo.com' AND p.nome = 'Cappuccino');
+
+INSERT INTO avaliacao (nota, comentario, data_hora, cliente_id, produto_id)
+SELECT 4, 'Pão de queijo quentinho, só achei um pouco pequeno.', DATEADD('HOUR', -25, LOCALTIMESTAMP),
+       (SELECT id FROM cliente WHERE email = 'felipe@exemplo.com'), (SELECT id FROM produto WHERE nome = 'Pão de Queijo')
+WHERE NOT EXISTS (SELECT 1 FROM avaliacao a JOIN cliente c ON c.id = a.cliente_id JOIN produto p ON p.id = a.produto_id
+                  WHERE c.email = 'felipe@exemplo.com' AND p.nome = 'Pão de Queijo');
+
+INSERT INTO avaliacao (nota, comentario, data_hora, cliente_id, produto_id)
+SELECT 5, 'Brownie perfeito com café.', DATEADD('HOUR', -20, LOCALTIMESTAMP),
+       (SELECT id FROM cliente WHERE email = 'rafael@exemplo.com'), (SELECT id FROM produto WHERE nome = 'Brownie')
+WHERE NOT EXISTS (SELECT 1 FROM avaliacao a JOIN cliente c ON c.id = a.cliente_id JOIN produto p ON p.id = a.produto_id
+                  WHERE c.email = 'rafael@exemplo.com' AND p.nome = 'Brownie');
+
+INSERT INTO avaliacao (nota, comentario, data_hora, cliente_id, produto_id)
+SELECT 2, 'O latte chegou com pouco gelo e meio aguado.', DATEADD('HOUR', -5, LOCALTIMESTAMP),
+       (SELECT id FROM cliente WHERE email = 'beatriz@exemplo.com'), (SELECT id FROM produto WHERE nome = 'Latte Gelado')
+WHERE NOT EXISTS (SELECT 1 FROM avaliacao a JOIN cliente c ON c.id = a.cliente_id JOIN produto p ON p.id = a.produto_id
+                  WHERE c.email = 'beatriz@exemplo.com' AND p.nome = 'Latte Gelado');

@@ -10,6 +10,7 @@ import FazerPedidoPage from "./pages/FazerPedidoPage";
 import PedidosPage from "./pages/PedidosPage";
 import PedidoDetailPage from "./pages/PedidoDetailPage";
 import ClientesPage from "./pages/ClientesPage";
+import AvaliacoesPage from "./pages/AvaliacoesPage";
 import RelatoriosPage from "./pages/RelatoriosPage";
 import PromocoesPage from "./pages/PromocoesPage";
 import ConfiguracoesPage from "./pages/ConfiguracoesPage";
@@ -31,7 +32,22 @@ function App() {
                     <Route path="pedidos" element={<PedidosPage />} />
                     <Route path="pedidos/:id" element={<PedidoDetailPage />} />
                     <Route path="cardapio" element={<CardapioPage />} />
-                    <Route path="clientes" element={<ClientesPage />} />
+                    <Route
+                        path="clientes"
+                        element={
+                            <PaginaCadastro titulo="Clientes" subtitulo="Cadastre e gerencie os clientes da cafeteria.">
+                                <ClientesPage />
+                            </PaginaCadastro>
+                        }
+                    />
+                    <Route
+                        path="avaliacoes"
+                        element={
+                            <PaginaCadastro titulo="Avaliações" subtitulo="O que os clientes acharam dos produtos do cardápio.">
+                                <AvaliacoesPage />
+                            </PaginaCadastro>
+                        }
+                    />
                     <Route path="relatorios" element={<RelatoriosPage />} />
                     <Route path="promocoes" element={<PromocoesPage />} />
                     <Route path="configuracoes" element={<ConfiguracoesPage />} />

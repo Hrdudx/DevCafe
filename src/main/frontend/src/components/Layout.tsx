@@ -9,6 +9,7 @@ import {
     FileText,
     House,
     LogOut,
+    MessageSquareHeart,
     Search,
     Settings,
     ShieldCheck,
@@ -20,7 +21,7 @@ import {
 import api from "../services/api";
 import type { Pedido } from "../types/Pedido";
 import type { Produto } from "../types/Produto";
-import { obterUsuario, obterUsuarioLogado, sair } from "../services/auth";
+import { obterToken, obterUsuarioLogado, sair } from "../services/auth";
 
 const navItens = [
     { to: "/", label: "Início", icon: House },
@@ -28,6 +29,7 @@ const navItens = [
     { to: "/pedidos", label: "Meus Pedidos", icon: ClipboardList },
     { to: "/cardapio", label: "Cardápio", icon: BookOpen },
     { to: "/clientes", label: "Clientes", icon: UserRound },
+    { to: "/avaliacoes", label: "Avaliações", icon: MessageSquareHeart },
     { to: "/relatorios", label: "Relatórios", icon: FileText },
     { to: "/promocoes", label: "Promoções", icon: Star },
     { to: "/usuarios", label: "Usuários", icon: UsersRound },
@@ -82,8 +84,8 @@ function Layout() {
         setBusca("");
     }
 
-    // Sem login, todas as telas internas mandam para a tela de login.
-    if (!obterUsuario()) {
+    // Rota protegida: sem token, todas as telas internas mandam para a tela de login.
+    if (!obterToken()) {
         return <Navigate to="/login" replace />;
     }
 

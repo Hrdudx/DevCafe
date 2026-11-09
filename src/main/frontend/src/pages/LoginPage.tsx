@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Coffee, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import axios from "axios";
 import api from "../services/api";
-import { salvarUsuarioLogado } from "../services/auth";
-import type { Usuario } from "../types/Usuario";
+import { salvarSessao } from "../services/auth";
+import type { RespostaLogin } from "../services/auth";
 
 function LoginPage() {
     const [email, setEmail] = useState("");
@@ -23,10 +23,10 @@ function LoginPage() {
         }
         setEntrando(true);
         setErro(null);
-        // Confere e-mail e senha com os usuários cadastrados no back-end.
-        api.post<Usuario>("/auth/login", { email, senha })
+        // Confere e-mail e senha no back-end, que devolve um token JWT.
+        api.post<RespostaLogin>("/auth/login", { email, senha })
             .then((resposta) => {
-                salvarUsuarioLogado(resposta.data);
+                salvarSessao(resposta.data);
                 navigate("/");
             })
             .catch((e) => {

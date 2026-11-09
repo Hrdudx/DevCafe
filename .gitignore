@@ -39,3 +39,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Fotos enviadas por upload (ficam só na máquina de quem roda)
+uploads/

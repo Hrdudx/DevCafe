@@ -1,128 +1,71 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { Eye, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import api from "../services/api";
-import type { Pedido } from "../types/Pedido";
-import Breadcrumb from "../components/Breadcrumb";
-import { formatarData, formatarMoeda } from "../utils/formatar";
+import type { Cliente } from "../types/Cliente";
+import ClienteForm from "../components/ClienteForm";
+import ClienteLista from "../components/ClienteLista";
+import { lerErroApi } from "../utils/erros";
 
-interface Cliente {
-    nome: string;
-    telefone?: string;
-    email?: string;
-    pedidos: number;
-    totalGasto: number;
-    ultimoPedido: Pedido;
-}
-
-// Os clientes saem dos próprios pedidos: cada nome diferente vira um cliente.
-function agruparClientes(pedidos: Pedido[]) {
-    const porNome = new Map<string, Cliente>();
-    for (const pedido of pedidos) {
-        if (!pedido.cliente) continue;
-        const atual = porNome.get(pedido.cliente);
-        const valido = pedido.status !== "CANCELADO";
-        if (!atual) {
-            porNome.set(pedido.cliente, {
-                nome: pedido.cliente,
-                telefone: pedido.telefone,
-                email: pedido.email,
-                pedidos: 1,
-                totalGasto: valido ? pedido.total : 0,
-                ultimoPedido: pedido,
-            });
-        } else {
-            atual.pedidos += 1;
-            atual.totalGasto += valido ? pedido.total : 0;
-            atual.telefone ??= pedido.telefone;
-            atual.email ??= pedido.email;
-            if (pedido.dataHora > atual.ultimoPedido.dataHora) atual.ultimoPedido = pedido;
-        }
-    }
-    return [...porNome.values()].sort((a, b) => b.ultimoPedido.dataHora.localeCompare(a.ultimoPedido.dataHora));
-}
-
+// N2 — tela nova: CRUD de clientes (cadastrar → listar → editar → excluir).
 function ClientesPage() {
-    const [pedidos, setPedidos] = useState<Pedido[]>([]);
+    const [clientes, setClientes] = useState<Cliente[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
-    const [busca, setBusca] = useState("");
+    const [erroExclusao, setErroExclusao] = useState<string | null>(null);
+    const [editando, setEditando] = useState<Cliente | null>(null);
+
+    function carregarClientes() {
+        api.get<Cliente[]>("/clientes")
+            .then((resposta) => {
+                setClientes(resposta.data);
+                setErro(null);
+            })
+            .catch(() => {
+                setErro("Não foi possível carregar os clientes. Verifique se o back-end está rodando.");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }
 
     useEffect(() => {
-        api.get<Pedido[]>("/pedidos")
-            .then((resposta) => setPedidos(resposta.data))
-            .catch(() => setErro("Não foi possível carregar os clientes. Verifique se o back-end está rodando."))
-            .finally(() => setLoading(false));
+        carregarClientes();
     }, []);
 
-    const clientes = useMemo(() => {
-        const termo = busca.trim().toLowerCase();
-        return agruparClientes(pedidos).filter((c) => termo === "" || c.nome.toLowerCase().includes(termo));
-    }, [pedidos, busca]);
+    async function excluir(id: number) {
+        if (!window.confirm("Tem certeza que deseja excluir este cliente?")) return;
+        try {
+            await api.delete(`/clientes/${id}`);
+            setErroExclusao(null);
+            if (editando?.id === id) setEditando(null);
+        } catch (e) {
+            setErroExclusao(lerErroApi(e, "Não foi possível excluir o cliente.").mensagem);
+        }
+        carregarClientes();
+    }
+
+    if (loading) {
+        return <p className="state-message">Carregando...</p>;
+    }
+
+    if (erro) {
+        return <p className="state-error">{erro}</p>;
+    }
 
     return (
-        <div>
-            <Breadcrumb voltarPara="/" itens={[{ label: "Clientes" }]} />
-            <div className="page-header">
-                <div>
-                    <h1 className="page-title">Clientes</h1>
-                    <p className="page-subtitle">Quem já fez pedidos na cafeteria.</p>
-                </div>
-                <label className="search-field">
-                    <Search size={16} />
-                    <input type="search" placeholder="Buscar cliente..." value={busca} onChange={(e) => setBusca(e.target.value)} />
-                </label>
-            </div>
+        <>
+            <ClienteForm
+                clienteEditando={editando}
+                onCancelar={() => setEditando(null)}
+                onClienteSalvo={() => {
+                    carregarClientes();
+                    setEditando(null);
+                }}
+            />
 
-            <section className="panel">
-                {loading && <p className="state-message">Carregando clientes...</p>}
-                {erro && <p className="state-error">{erro}</p>}
-                {!loading && !erro && clientes.length === 0 && <p className="state-message">Nenhum cliente encontrado.</p>}
-                {!loading && !erro && clientes.length > 0 && (
-                    <div className="table-wrap">
-                        <table className="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Cliente</th>
-                                    <th>Telefone</th>
-                                    <th>E-mail</th>
-                                    <th>Pedidos</th>
-                                    <th>Total gasto</th>
-                                    <th>Último pedido</th>
-                                    <th className="col-acoes">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {clientes.map((cliente) => (
-                                    <tr key={cliente.nome}>
-                                        <td>
-                                            <span className="produto-cell">
-                                                <span className="avatar-sm">{cliente.nome.charAt(0)}</span>
-                                                {cliente.nome}
-                                            </span>
-                                        </td>
-                                        <td className="col-muted">{cliente.telefone ?? "—"}</td>
-                                        <td className="col-muted">{cliente.email ?? "—"}</td>
-                                        <td>{cliente.pedidos}</td>
-                                        <td>{formatarMoeda(cliente.totalGasto)}</td>
-                                        <td className="col-muted">{formatarData(cliente.ultimoPedido.dataHora)}</td>
-                                        <td className="col-acoes">
-                                            <Link
-                                                className="btn-icon"
-                                                to={`/pedidos?busca=${encodeURIComponent(cliente.nome)}`}
-                                                aria-label={`Ver pedidos de ${cliente.nome}`}
-                                            >
-                                                <Eye size={17} />
-                                            </Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </section>
-        </div>
+            {erroExclusao && <p className="state-error">{erroExclusao}</p>}
+
+            <ClienteLista clientes={clientes} onEditar={setEditando} onExcluir={excluir} />
+        </>
     );
 }
 

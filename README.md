@@ -14,7 +14,7 @@ Back-end em **Java + Spring Boot** e front-end em **React + TypeScript**, integr
 - **N2 — Trabalho Final:** dois modelos novos, `Cliente` e `Avaliacao` (1 cliente → N avaliações), com CRUD
   completo e duas telas novas (**Clientes** e **Avaliações**); login com **Spring Security + JWT** e rotas protegidas;
   e os extras **Bean Validation**, **API externa** (ViaCEP com `RestTemplate`), **upload de foto** dos produtos
-  (`MultipartFile` + pré-visualização), **testes automatizados** (JUnit + MockMvc), **Tailwind CSS** e este **README**.
+  (`MultipartFile` + pré-visualização), **testes automatizados** (JUnit + MockMvc no back-end e Vitest no front-end), **Tailwind CSS** e este **README**.
 
 > **Por que continuar com o DevCafé na N2?** O projeto da N1 já funcionava de ponta a ponta, então partir dele
 > permitiu investir o tempo nos conteúdos novos. Clientes e avaliações são uma evolução natural de uma cafeteria:
@@ -129,6 +129,8 @@ Leva cerca de 10 minutos e cobre todos os itens da checklist da N2 (seção 3).
    Arquivos que não são imagem ou com mais de 2 MB são recusados.
 3. **Testes:** pare o back-end e rode `.\mvnw.cmd test` (Windows) ou `./mvnw test` (Linux/macOS): **13 testes** devem passar
    (`Tests run: 13, Failures: 0`).
+4. **Testes do front-end:** na pasta `src/main/frontend`, rode `npm test`: **12 testes** devem passar
+   (`Tests 12 passed`). Eles não precisam do back-end ligado.
 
 ### 2.6 Banco de dados (opcional)
 No H2 Console (`http://localhost:8080/h2-console`, JDBC URL `jdbc:h2:file:./database.db`, usuário `sa`, sem senha),
@@ -181,7 +183,7 @@ a tabela `AVALIACAO` tem as colunas `CLIENTE_ID` e `PRODUTO_ID`: são as chaves 
 | **Validação**: Bean Validation no back-end e mensagens de erro no formulário | ✅ `@NotBlank`, `@Email`, `@Size`, `@NotNull`, `@Min`, `@Max` em `Cliente` e `Avaliacao`, com `@Valid` nos controllers. O `config/TratadorDeErros.java` devolve o erro de cada campo, e os formulários mostram a mensagem embaixo do campo |
 | **API externa** com `RestTemplate` | ✅ `service/CepService.java` consulta a ViaCEP (`config/RestTemplateConfig.java`, `controller/CepController.java`, `dto/EnderecoCep.java`); no front, o botão **Buscar CEP** em `components/ClienteForm.tsx` |
 | **Upload de arquivos** (`MultipartFile` + preview) | ✅ `POST /api/produtos/{id}/imagem` em `ProdutoController`; regras (só imagem, até 2 MB, nome único) em `ProdutoService.salvarImagem`; arquivos servidos em `/uploads/**` (`config/UploadConfig.java`); pré-visualização com `URL.createObjectURL` em `components/ProdutoForm.tsx` |
-| **Testes** (JUnit/MockMvc) | ✅ `src/test/java/.../ClienteAvaliacaoApiTest.java` (login/JWT, CRUD, Bean Validation, regras de negócio, upload) e `CepServiceTest.java` (ViaCEP simulada com `MockRestServiceServer`). Rodar com `mvnw test` |
+| **Testes** (JUnit/MockMvc no back e testes no front) | ✅ Back-end: `src/test/java/.../ClienteAvaliacaoApiTest.java` (login/JWT, CRUD, Bean Validation, regras de negócio, upload) e `CepServiceTest.java` (ViaCEP simulada com `MockRestServiceServer`), rodando com `mvnw test`. Front-end: Vitest + Testing Library em `src/main/frontend/src/tests/` (estrelas, lista e itens de clientes com Editar/Excluir, formulário com POST/PUT, erros de validação e Buscar CEP, com a API simulada), rodando com `npm test` |
 | **Framework CSS** | ✅ Tailwind CSS (desde a N1) |
 | **README** com instruções para rodar back e front | ✅ este arquivo (seções 1 e 2) |
 | Deploy com Docker | não implementado |

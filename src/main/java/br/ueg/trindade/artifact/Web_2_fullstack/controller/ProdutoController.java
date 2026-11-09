@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -44,6 +48,12 @@ public class ProdutoController {
     @PutMapping("/{id}")
     public Produto updateProduto(@PathVariable Long id, @RequestBody Produto produtoAtualizado) {
         return produtoService.atualizar(id, produtoAtualizado);
+    }
+
+    // Upload da foto do produto: formulário multipart com o campo "arquivo".
+    @PostMapping(value = "/{id}/imagem", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Produto uploadImagem(@PathVariable Long id, @RequestParam("arquivo") MultipartFile arquivo) {
+        return produtoService.salvarImagem(id, arquivo);
     }
 
     @DeleteMapping("/{id}")

@@ -927,6 +927,8 @@ button.btn-icon {
 .produto-card {
   display: flex;
   flex-direction: column;
+  /* Sem isto, uma foto larga força a coluna da grade a crescer e o cardápio estoura para o lado. */
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -944,13 +946,18 @@ button.btn-icon {
   position: relative;
   aspect-ratio: 16 / 10;
   background: var(--surface-muted);
+  overflow: hidden;
 }
 
 .produto-card.compacto .produto-card-img {
   aspect-ratio: 4 / 3;
 }
 
+/* Toda foto ocupa exatamente o espaço da moldura (recortada no centro),
+   seja ela em pé, deitada, grande ou pequena: assim todos os cards ficam do mesmo tamanho. */
 .produto-card-img img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;

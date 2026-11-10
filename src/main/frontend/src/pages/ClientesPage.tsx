@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Search } from "lucide-react";
 import api from "../services/api";
 import type { Cliente } from "../types/Cliente";
 import ClienteForm from "../components/ClienteForm";
@@ -7,6 +9,8 @@ import { lerErroApi } from "../utils/erros";
 
 // N2 — tela nova: CRUD de clientes (cadastrar → listar → editar → excluir).
 function ClientesPage() {
+    const [params] = useSearchParams();
+    const [busca, setBusca] = useState(params.get("busca") ?? "");
     const [clientes, setClientes] = useState<Cliente[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
@@ -30,6 +34,19 @@ function ClientesPage() {
     useEffect(() => {
         carregarClientes();
     }, []);
+
+    // Busca do topo com esta tela já aberta: acompanha o endereço (?busca=...).
+    useEffect(() => {
+        const buscaNova = params.get("busca");
+        if (buscaNova !== null) setBusca(buscaNova);
+    }, [params]);
+
+    // Filtra pelo nome ou e-mail, sem diferenciar maiúsculas.
+    const clientesVisiveis = useMemo(() => {
+        const termo = busca.trim().toLowerCase();
+        if (!termo) return clientes;
+        return clientes.filter((c) => `${c.nome} ${c.email}`.toLowerCase().includes(termo));
+    }, [clientes, busca]);
 
     async function excluir(id: number) {
         if (!window.confirm("Tem certeza que deseja excluir este cliente?")) return;
@@ -64,7 +81,21 @@ function ClientesPage() {
 
             {erroExclusao && <p className="state-error">{erroExclusao}</p>}
 
-            <ClienteLista clientes={clientes} onEditar={setEditando} onExcluir={excluir} />
+            <label className="search-field search-field-full">
+                <Search size={16} />
+                <input
+                    type="search"
+                    placeholder="Buscar cliente por nome ou e-mail..."
+                    value={busca}
+                    onChange={(e) => setBusca(e.target.value)}
+                />
+            </label>
+
+            {busca.trim() && clientesVisiveis.length === 0 ? (
+                <p className="state-message">Nenhum cliente encontrado para "{busca}".</p>
+            ) : (
+                <ClienteLista clientes={clientesVisiveis} onEditar={setEditando} onExcluir={excluir} />
+            )}
         </>
     );
 }

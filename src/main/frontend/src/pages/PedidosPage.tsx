@@ -47,6 +47,18 @@ function PedidosPage() {
     const [dataInicio, setDataInicio] = useState(params.get("busca") ? "" : diaRelativo(1));
     const [dataFim, setDataFim] = useState(params.get("busca") ? "" : diaRelativo(0));
 
+    // Busca do topo ou sininho com esta tela já aberta: acompanha o endereço (?busca= / ?aba=).
+    useEffect(() => {
+        const buscaNova = params.get("busca");
+        if (buscaNova !== null) {
+            setBusca(buscaNova);
+            setDataInicio("");
+            setDataFim("");
+        }
+        const abaNova = params.get("aba");
+        if (abaNova) setAba(abaNova);
+    }, [params]);
+
     function carregarPedidos() {
         api.get<Pedido[]>("/pedidos")
             .then((resposta) => {

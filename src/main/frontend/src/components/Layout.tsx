@@ -21,6 +21,7 @@ import {
 import api from "../services/api";
 import type { Pedido } from "../types/Pedido";
 import type { Produto } from "../types/Produto";
+import type { Cliente } from "../types/Cliente";
 import { obterToken, obterUsuarioLogado, sair } from "../services/auth";
 
 const navItens = [
@@ -56,11 +57,15 @@ function Layout() {
     const [busca, setBusca] = useState("");
     const [emAndamento, setEmAndamento] = useState(0);
     const [nomesProdutos, setNomesProdutos] = useState<string[]>([]);
+    const [clientesBusca, setClientesBusca] = useState<string[]>([]);
     const [menuUsuario, setMenuUsuario] = useState(false);
 
     useEffect(() => {
         api.get<Produto[]>("/produtos")
             .then((resposta) => setNomesProdutos(resposta.data.map((p) => p.nome.toLowerCase())))
+            .catch(() => {});
+        api.get<Cliente[]>("/clientes")
+            .then((resposta) => setClientesBusca(resposta.data.map((c) => `${c.nome} ${c.email}`.toLowerCase())))
             .catch(() => {});
         api.get<Pedido[]>("/pedidos")
             .then((resposta) => {
@@ -74,10 +79,13 @@ function Layout() {
         event.preventDefault();
         const termo = busca.trim();
         if (!termo) return;
-        // Se o texto bate com algum produto, abre o cardápio; senão procura
-        // nos pedidos (pelo número ou pelo nome do cliente).
-        if (nomesProdutos.some((nome) => nome.includes(termo.toLowerCase()))) {
+        // Se o texto bate com algum produto, abre o cardápio; se bate com um cliente
+        // (nome ou e-mail), abre Clientes; senão procura nos pedidos (número ou nome do cliente).
+        const texto = termo.toLowerCase();
+        if (nomesProdutos.some((nome) => nome.includes(texto))) {
             navigate(`/cardapio?busca=${encodeURIComponent(termo)}`);
+        } else if (clientesBusca.some((cliente) => cliente.includes(texto))) {
+            navigate(`/clientes?busca=${encodeURIComponent(termo)}`);
         } else {
             navigate(`/pedidos?busca=${encodeURIComponent(termo.replace("#", ""))}`);
         }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ArrowRight, Coffee, Search, SlidersHorizontal } from "lucide-react";
 import { useProdutos, filtrarProdutos } from "../hooks/useProdutos";
@@ -25,6 +25,15 @@ function CardapioPage() {
     const [busca, setBusca] = useState(params.get("busca") ?? "");
     const [ordenacao, setOrdenacao] = useState("padrao");
     const [menuAberto, setMenuAberto] = useState(false);
+
+    // A busca do topo muda o endereço (?busca=...) mesmo quando esta tela já está aberta:
+    // acompanha o endereço para a busca nova aparecer sem precisar recarregar a página.
+    useEffect(() => {
+        const buscaNova = params.get("busca");
+        if (buscaNova !== null) setBusca(buscaNova);
+        const categoriaNova = params.get("categoria");
+        if (categoriaNova) setCategoria(categoriaNova);
+    }, [params]);
 
     const produtosVisiveis = useMemo(() => {
         const lista = filtrarProdutos(produtos, categoria, busca);

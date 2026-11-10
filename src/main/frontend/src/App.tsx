@@ -12,7 +12,6 @@ import PedidoDetailPage from "./pages/PedidoDetailPage";
 import ClientesPage from "./pages/ClientesPage";
 import AvaliacoesPage from "./pages/AvaliacoesPage";
 import RelatoriosPage from "./pages/RelatoriosPage";
-import PromocoesPage from "./pages/PromocoesPage";
 import ConfiguracoesPage from "./pages/ConfiguracoesPage";
 import UsuariosPage from "./pages/UsuariosPage";
 import PermissoesPage from "./pages/PermissoesPage";
@@ -49,7 +48,6 @@ function App() {
                         }
                     />
                     <Route path="relatorios" element={<RelatoriosPage />} />
-                    <Route path="promocoes" element={<PromocoesPage />} />
                     <Route path="configuracoes" element={<ConfiguracoesPage />} />
                     <Route
                         path="usuarios"

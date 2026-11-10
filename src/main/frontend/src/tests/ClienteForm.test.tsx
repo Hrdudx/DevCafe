@@ -80,7 +80,7 @@ describe("ClienteForm", () => {
         apiFalsa.get.mockResolvedValue({ data: { enderecoFormatado: "Rua 1, Centro - Goiânia/GO" } });
         render(<ClienteForm onClienteSalvo={vi.fn()} onCancelar={vi.fn()} />);
 
-        await userEvent.type(screen.getByPlaceholderText("CEP (opcional)"), "74000-000");
+        await userEvent.type(screen.getByPlaceholderText(/^CEP/), "74000-000");
         await userEvent.click(screen.getByRole("button", { name: "Buscar CEP" }));
 
         expect(apiFalsa.get).toHaveBeenCalledWith("/cep/74000000");
@@ -91,7 +91,7 @@ describe("ClienteForm", () => {
     it("CEP com menos de 8 números mostra erro e nem chama a API", async () => {
         render(<ClienteForm onClienteSalvo={vi.fn()} onCancelar={vi.fn()} />);
 
-        await userEvent.type(screen.getByPlaceholderText("CEP (opcional)"), "123");
+        await userEvent.type(screen.getByPlaceholderText(/^CEP/), "123");
         await userEvent.click(screen.getByRole("button", { name: "Buscar CEP" }));
 
         expect(screen.getByText("Informe o CEP com 8 números (ex.: 74000-000)")).toBeTruthy();

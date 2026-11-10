@@ -1651,6 +1651,10 @@ button.btn-icon {
   gap: 8px;
 }
 
+.campo-com-botao .input {
+  max-width: 260px;
+}
+
 .campo-com-botao .btn {
   flex-shrink: 0;
 }

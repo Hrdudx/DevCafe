@@ -14,7 +14,6 @@ import {
     Settings,
     ShieldCheck,
     ShoppingCart,
-    Star,
     UserRound,
     UsersRound,
 } from "lucide-react";
@@ -32,7 +31,6 @@ const navItens = [
     { to: "/clientes", label: "Clientes", icon: UserRound },
     { to: "/avaliacoes", label: "Avaliações", icon: MessageSquareHeart },
     { to: "/relatorios", label: "Relatórios", icon: FileText },
-    { to: "/promocoes", label: "Promoções", icon: Star },
     { to: "/usuarios", label: "Usuários", icon: UsersRound },
     { to: "/atribuir-permissoes", label: "Atribuir Permissões", icon: ShieldCheck },
     { to: "/configuracoes", label: "Configurações", icon: Settings },

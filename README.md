@@ -120,9 +120,10 @@ Leva cerca de 10 minutos e cobre todos os itens da checklist da N2 (seção 3).
 4. Regra extra: em **Configurações → Produtos**, um produto que já foi avaliado não pode ser excluído.
 
 ### 2.5 Extras: CEP e foto do produto
-1. **API externa (ViaCEP):** em **Clientes**, digite um CEP (ex.: `74000-000`) e clique em **Buscar CEP**: o campo
+1. **API externa (ViaCEP):** em **Clientes**, digite um CEP real (ex.: `01001-000`, Praça da Sé em São Paulo) e clique em **Buscar CEP**: o campo
    **Endereço** é preenchido sozinho. O front chama o nosso back-end (`GET /api/cep/{cep}`), e o back-end consulta a ViaCEP
-   com `RestTemplate`. CEP com formato errado mostra *"O CEP deve ter 8 números"*; sem internet, aparece um aviso para
+   com `RestTemplate`. CEP com formato errado mostra *"Informe o CEP com 8 números"*; um CEP que não existe (ex.: `00000-000`)
+   mostra *"CEP não encontrado"*; sem internet, aparece um aviso para
    preencher o endereço manualmente.
 2. **Upload:** em **Configurações → Produtos**, clique em **Editar** num produto, escolha uma foto em **Ou envie uma foto**:
    a pré-visualização aparece na hora. Clique em **Salvar alterações**: a foto passa a aparecer no **Cardápio**.

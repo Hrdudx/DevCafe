@@ -107,14 +107,14 @@ function ClienteForm({ onClienteSalvo, onCancelar, clienteEditando }: ClienteFor
                 />
                 {errosCampos.telefone && <span className="campo-erro">{errosCampos.telefone}</span>}
             </label>
-            <div className="form-campo">
+            <div className="form-campo form-campo-largo">
                 <span className="campo-com-botao">
                     <input
                         className={"input" + (errosCampos.cep ? " input-erro" : "")}
                         value={cep}
                         onChange={(e) => setCep(e.target.value)}
                         onBlur={() => cep.replace(/\D/g, "").length === 8 && !endereco && buscarCep()}
-                        placeholder="CEP (opcional)"
+                        placeholder="CEP (opcional) — ex.: 01001-000"
                         inputMode="numeric"
                         maxLength={9}
                     />
